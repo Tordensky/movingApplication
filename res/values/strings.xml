@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Moving</string>
+    <string name="addBoxMenu">New Box</string>
+    <string name="boxName">Name</string>
+    <string name="boxDescription">Description</string>
+    <string name="boxNameHint">Tap to enter box name</string>
+    <string name="boxDescHint">Tap to enter box description</string>
+    <string name="confirmBoxDet">Update</string>
+    <string name="boxListMenuDelete">Delete box</string>
+    <string name="boxListMenuEdit">Edit box info</string>
+    <string name="addItemMenu">Add Item</string>
+    <string name="boxListMenuCreateTag">Create Tag</string>
+</resources>
