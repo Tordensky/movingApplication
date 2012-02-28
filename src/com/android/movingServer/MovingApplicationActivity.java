@@ -50,7 +50,7 @@ public class MovingApplicationActivity extends ListActivity {
     }
     
     private void fillData() {
-    	Toast.makeText(this, "Why2?", 1000).show();
+    	//Toast.makeText(this, "Why2?", 1000).show();
     	
     	mMovingCursor = mDbHelper.fetchAllBoxes();
     	startManagingCursor(mMovingCursor);
@@ -147,7 +147,7 @@ public class MovingApplicationActivity extends ListActivity {
     	
     	Intent i = new Intent(this, CreateTag.class);
     	
-    	i.putExtra(CreateTag.TAG_TEXT, "TEST");
+    	i.putExtra(CreateTag.TAG_TEXT, "Mordi123");
     	
     	startActivity(i);
     }
