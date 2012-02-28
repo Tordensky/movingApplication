@@ -18,6 +18,7 @@
         <activity android:name="BoxEdit"></activity>
         <activity android:name="itemList"></activity>
         <activity android:name="CreateTag"></activity>
+        <activity android:name="ItemEdit"></activity>
 
     </application>
 </manifest>

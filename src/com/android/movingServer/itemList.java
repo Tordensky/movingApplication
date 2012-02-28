@@ -73,9 +73,10 @@ public class itemList extends ListActivity{
 	}
 	
 	private void createItem() {
-		mDbHelper.createItem(CurrentBoxID, "Korn", "Diverse småsaker");
-		//Intent i = new Intent(this, BoxEdit.class);
-    	//startActivityForResult(i, ACTIVITY_CREATE_ITEM);
+		//mDbHelper.createItem(CurrentBoxID, "Korn", "Diverse småsaker");
+		Intent i = new Intent(this, ItemEdit.class);
+		i.putExtra(MovingDbAdapter.KEY_BOX_ID, CurrentBoxID);
+    	startActivityForResult(i, ACTIVITY_CREATE_ITEM);
 	}
 	
 	@Override

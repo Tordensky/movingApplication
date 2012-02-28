@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Moving</string>
+    <string name="app_name">Moving Assistant</string>
     <string name="addBoxMenu">New Box</string>
     <string name="boxName">Name</string>
     <string name="boxDescription">Description</string>
