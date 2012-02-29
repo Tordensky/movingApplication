@@ -7,12 +7,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.nfc.NdefMessage;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -24,7 +28,7 @@ public class MovingApplicationActivity extends ListActivity {
 	private static final int ACTIVITY_CREATE_BOX = 0;
 	private static final int ACTIVITY_EDIT_BOX = 1;
 	private static final int ACTIVTY_ITEMS_LIST = 2;
-	private static final int ACTIVTY_CREATE_TAG = 3;
+	private static final int ACTIVTY_READ_TAG = 3;
 	
 	private MovingDbAdapter mDbHelper;
 	private Cursor mMovingCursor;
@@ -33,7 +37,10 @@ public class MovingApplicationActivity extends ListActivity {
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final int EDIT_BOX = Menu.FIRST + 2;
 	private static final int CREATE_TAG = Menu.FIRST + 3;
+	private static final int READ_BOX_TAG = Menu.FIRST + 4;
 	
+	private EditText boxSearchField;
+	private String boxSearchString;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,13 +53,35 @@ public class MovingApplicationActivity extends ListActivity {
                 
         fillData();
         
+        boxSearchField = (EditText) findViewById(R.id.searchBoxesInputField);
+        
+        boxSearchField.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				boxSearchString = boxSearchField.getText().toString();
+				fillData();
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+			}
+		});
+        
         registerForContextMenu(getListView());
     }
     
     private void fillData() {
-    	//Toast.makeText(this, "Why2?", 1000).show();
+    	//Toast.makeText(this, "Fill data", 1000).show();
     	
-    	mMovingCursor = mDbHelper.fetchAllBoxes();
+    	mMovingCursor = mDbHelper.fetchAllBoxesSearch(boxSearchString);
     	startManagingCursor(mMovingCursor);
     	
     	String[] from = new String[]{MovingDbAdapter.KEY_BOX_NAME, MovingDbAdapter.KEY_BOX_DESC};
@@ -68,7 +97,7 @@ public class MovingApplicationActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(0, INSERT_ID, 0, R.string.addBoxMenu);
-        //menu.add(0, DELETE_ALL, 0, R.string.menu_delete_all);
+        menu.add(0, READ_BOX_TAG, 0, R.string.readBoxTag);
         return true;
     }
     
@@ -78,11 +107,17 @@ public class MovingApplicationActivity extends ListActivity {
         case INSERT_ID:
             createBox();
         	return true;
+        	
+        case READ_BOX_TAG:
+        	readTag();
         }
+        
         
         return super.onMenuItemSelected(featureId, item);
     }
     
+
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
@@ -130,9 +165,7 @@ public class MovingApplicationActivity extends ListActivity {
     
     protected void onListItemClick(ListView l, View v, int position, long id){
     	super.onListItemClick(l, v, position, id);
-    	Intent i = new Intent(this, itemList.class);
-    	i.putExtra(MovingDbAdapter.KEY_BOX_ID, id);
-    	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
+    	gotoBox(id);
     }
 	
 	
@@ -141,22 +174,32 @@ public class MovingApplicationActivity extends ListActivity {
     	startActivityForResult(i, ACTIVITY_CREATE_BOX);
     }
     
+	private void readTag() {
+		Intent i = new Intent(this, ReadTag.class);
+		startActivityForResult(i, ACTIVTY_READ_TAG);	
+	}
+    
     private void createTag(long BID) {
     	
-    	//NdefMessage tagContent = EasyNdef.ndefFromString("TEST");
-    	
     	Intent i = new Intent(this, CreateTag.class);
-    	
-    	i.putExtra(CreateTag.TAG_TEXT, "Mordi123");
-    	
+    	i.putExtra(CreateTag.TAG_TEXT, "BOX#"+BID);
     	startActivity(i);
+    }
+    
+    private void gotoBox(long BID){
+    	Intent i = new Intent(this, itemList.class);
+    	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
+    	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
     }
     
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
     	super.onActivityResult(requestCode, resultCode, intent);
     	
-    	Bundle extras = intent.getExtras();
-        
+    	Bundle extras;
+    	
+    	
+		extras = intent.getExtras();
+
     	switch(requestCode){
         
         case ACTIVITY_CREATE_BOX:
@@ -186,7 +229,29 @@ public class MovingApplicationActivity extends ListActivity {
         case ACTIVTY_ITEMS_LIST:
         	fillData();
         	break;
+        	
+        case ACTIVTY_READ_TAG:
+        	
+        	try {
+	        	String tagText = extras.getString("TAG_TEXT");
+	        	String[] tagSplit;
+	        	
+	        	tagSplit = tagText.split("#");
+	        	
+	        	if (tagSplit[0].compareTo("BOX") == 0){
+	        		Toast.makeText(this, tagSplit[1], 1000).show();
+	        		gotoBox((long)Integer.parseInt(tagSplit[1]));
+	        		
+	        	}
+        	} catch (Exception e){
+        		Log.e("READ TAG", "Crashed when checking tag content");
+        	}
+        	
+        	Log.w("ACTIVITY READ", "Kommer hit");
+        	break;
     	}
+    	
+    	
     }
     		
 }

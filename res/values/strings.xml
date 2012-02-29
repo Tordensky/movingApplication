@@ -11,4 +11,5 @@
     <string name="boxListMenuEdit">Edit box info</string>
     <string name="addItemMenu">Add Item</string>
     <string name="boxListMenuCreateTag">Create Tag</string>
+    <string name="readBoxTag">Get Box From Tag</string>
 </resources>

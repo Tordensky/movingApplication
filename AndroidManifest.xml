@@ -19,6 +19,7 @@
         <activity android:name="itemList"></activity>
         <activity android:name="CreateTag"></activity>
         <activity android:name="ItemEdit"></activity>
+        <activity android:name="ReadTag"></activity>
 
     </application>
 </manifest>

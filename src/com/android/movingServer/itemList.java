@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 public class itemList extends ListActivity{
 
@@ -18,6 +20,9 @@ public class itemList extends ListActivity{
 	private Cursor mMovingCursor;
 	
 	private long CurrentBoxID;
+	
+	TextView boxName;
+	TextView boxDescription;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,9 @@ public class itemList extends ListActivity{
 		mDbHelper = new MovingDbAdapter(this);
         mDbHelper.open();
         
+        boxName = (TextView)findViewById(R.id.itemListBoxName); 
+        boxDescription = (TextView)findViewById(R.id.itemListBoxDescription);
+        
 		fillData();
 		
 		registerForContextMenu(getListView());
@@ -40,7 +48,14 @@ public class itemList extends ListActivity{
 	
 	
 	private void fillData(){
+		mMovingCursor = mDbHelper.getBoxFromID(CurrentBoxID);
+		mMovingCursor.moveToFirst();
+		
+		boxName.setText(mMovingCursor.getString(1));
+		boxDescription.setText(mMovingCursor.getString(2));
+		
     	mMovingCursor = mDbHelper.fetchAllItemsFromBox(CurrentBoxID);
+    	
     	startManagingCursor(mMovingCursor);
     	
     	String[] from = new String[]{MovingDbAdapter.KEY_ITEM_NAME, MovingDbAdapter.KEY_ITEM_DESC};

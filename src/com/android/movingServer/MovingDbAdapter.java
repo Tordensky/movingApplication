@@ -55,7 +55,6 @@ public class MovingDbAdapter {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(DATABASE_CREATE_BOXES_TABLE);
 			db.execSQL(DATABASE_CREATE_ITEMS_TABLE);
-			
 		}
 
 		@Override
@@ -64,9 +63,7 @@ public class MovingDbAdapter {
                     + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS notes");
             onCreate(db);
-			
 		}
-		
 	}
 
     public MovingDbAdapter(Context ctx) {
@@ -105,9 +102,26 @@ public class MovingDbAdapter {
     	return mDb.insert(DATABASE_BOX_TABLE, null, initialValues);
     }
     
+    public Cursor getBoxFromID(long BID){
+    	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC}, 
+    			KEY_BOX_ID + "=" + BID, null, null, null, null);
+    }
+    
     public Cursor fetchAllBoxes() {
     	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC}, 
     			null, null, null, null, KEY_BOX_NAME + " ASC");
+    }
+    
+    public Cursor fetchAllBoxesSearch(String search) {
+    	if (search == null){
+    		search = "";
+    	}
+    	search = search.toLowerCase();
+    	String where = 	KEY_BOX_NAME.toLowerCase() + " LIKE '%" + search + "%' or " + 
+    					KEY_BOX_DESC.toLowerCase() + " LIKE '%" + search + "%' ";
+    	
+    	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC}, 
+    			where, null, null, null, KEY_BOX_NAME + " ASC");
     }
 
 	public boolean deleteBox(long rowId) {
@@ -130,6 +144,10 @@ public class MovingDbAdapter {
      */
     public long createItem(long boxID, String itemName, String itemDescription) {
     	ContentValues initialValues = new ContentValues();
+    	if (itemName.length() == 0){
+    		itemName = "no name item";
+    	}
+    
     	initialValues.put(KEY_ITEM_NAME, itemName);
     	initialValues.put(KEY_ITEM_DESC, itemDescription);
     	initialValues.put(KEY_ITEM_BOX_ID, boxID);

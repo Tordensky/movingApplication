@@ -1,12 +1,16 @@
 package com.android.movingServer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.os.Vibrator;
 
 public class ItemEdit extends Activity{
 
@@ -33,16 +37,17 @@ public class ItemEdit extends Activity{
 		mItemDescriptionText = (EditText) findViewById(R.id.newItemDescription);
 		Button confirmButton = (Button) findViewById(R.id.newItemConfirmButton);
 		Button newItemButton = (Button) findViewById(R.id.addNewItemButton);
-		
+				
 		confirmButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 
 				mDbHelper.createItem(CurrentBoxID, mItemNameText.getText().toString(), mItemDescriptionText.getText().toString());
+				print_msg("Item added", 100);
 				Intent mIntent = new Intent();
 				setResult(RESULT_OK, mIntent);
-				finish();	
+				finish();
 			}
 		});
 		
@@ -53,11 +58,21 @@ public class ItemEdit extends Activity{
 
 				mDbHelper.createItem(CurrentBoxID, mItemNameText.getText().toString(), mItemDescriptionText.getText().toString());
 				
-				
+				print_msg("Item added", 100);
 				
 				mItemNameText.setText("");
+				
 				mItemDescriptionText.setText("");
 			}
 		});
 	}
+	
+	private void print_msg(String message, int duration){
+		Toast.makeText(this, message, duration).show();
+		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		v.vibrate(100);
+	}
+	
+	
+	
 }

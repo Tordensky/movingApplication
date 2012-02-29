@@ -2,6 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" android:orientation="vertical">
+
+    <LinearLayout 
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        >
+        
+	    
+       	<TextView 	
+       	    android:id="@+id/android:empty"
+       		android:layout_width="wrap_content"
+       		android:layout_height="wrap_content"
+       		android:text="Search"
+       		android:textSize="20sp"/>		
+        
+	    <EditText
+	        android:id="@+id/searchBoxesInputField"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" >
+	        
+	        <requestFocus /> </EditText>
+    </LinearLayout>
+    
+    
     
     <ListView  	android:id="@+id/android:list"
     			android:layout_width="fill_parent"
@@ -10,6 +35,6 @@
 	<TextView 	android:id="@+id/android:empty"
           		android:layout_width="fill_parent"
         		android:layout_height="wrap_content"
-        		android:text="No boxes"
+        		android:text=""
         		android:textSize="20sp"/>		
 </LinearLayout>
