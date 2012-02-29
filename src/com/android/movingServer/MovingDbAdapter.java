@@ -125,6 +125,7 @@ public class MovingDbAdapter {
     }
 
 	public boolean deleteBox(long rowId) {
+		deleteAllItemsInBox(rowId);
 		return mDb.delete(DATABASE_BOX_TABLE, KEY_BOX_ID + "=" + rowId, null) > 0;
 	}
 
@@ -147,7 +148,13 @@ public class MovingDbAdapter {
     	if (itemName.length() == 0){
     		itemName = "no name item";
     	}
-    
+    	
+    	itemName = itemName.substring(0,1).toUpperCase()+itemName.substring(1).toLowerCase();
+    	
+    	if (itemDescription.length() > 1){
+    		itemDescription = itemDescription.substring(0,1).toUpperCase()+itemDescription.substring(1).toLowerCase();	
+    	}
+
     	initialValues.put(KEY_ITEM_NAME, itemName);
     	initialValues.put(KEY_ITEM_DESC, itemDescription);
     	initialValues.put(KEY_ITEM_BOX_ID, boxID);
@@ -162,6 +169,10 @@ public class MovingDbAdapter {
 
 	public boolean deleteItem(long rowId) {
 		return mDb.delete(DATABASE_ITEM_TABLE, KEY_ITEM_ID + "=" + rowId, null) > 0;
+	}
+	
+	public boolean deleteAllItemsInBox(long BID){
+		return mDb.delete(DATABASE_ITEM_TABLE, KEY_ITEM_BOX_ID + "=" + BID, null) > 0;
 	}
 
 	public boolean editItem(Long itemID, String newItemName, String newItemDescription) {

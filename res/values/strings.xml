@@ -12,4 +12,9 @@
     <string name="addItemMenu">Add Item</string>
     <string name="boxListMenuCreateTag">Create Tag</string>
     <string name="readBoxTag">Get Box From Tag</string>
+    <string name="newItemAndNewButtonText">Create and New</string>
+    <string name="newItemButtonText">Create and Finish</string>
+    <string name="newItemFinishedButtonText">Cancel</string>
+    <string name="search">Search</string>
+    <string name="searchBoxHint">tap to search</string>
 </resources>

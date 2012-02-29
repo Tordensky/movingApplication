@@ -1,17 +1,15 @@
 package com.android.movingServer;
 
 
-import uit.nfc.EasyNdef;
+
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.nfc.NdefMessage;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -191,6 +189,19 @@ public class MovingApplicationActivity extends ListActivity {
     	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
     	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
     }
+    
+/*    private void enableDisableView(View view, boolean enabled) {
+        view.setEnabled(enabled);
+
+        if ( view instanceof ViewGroup ) {
+            ViewGroup group = (ViewGroup)view;
+
+            for ( int idx = 0 ; idx < group.getChildCount() ; idx++ ) {
+                enableDisableView(group.getChildAt(idx), enabled);
+            }
+        }
+    }*/
+
     
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
     	super.onActivityResult(requestCode, resultCode, intent);

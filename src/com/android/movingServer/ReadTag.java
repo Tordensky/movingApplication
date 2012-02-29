@@ -2,7 +2,6 @@ package com.android.movingServer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 import uit.nfc.EasyNfcReaderActivity;
 
 public class ReadTag extends EasyNfcReaderActivity{

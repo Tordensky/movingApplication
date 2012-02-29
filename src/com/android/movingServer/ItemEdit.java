@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +35,7 @@ public class ItemEdit extends Activity{
 		mItemDescriptionText = (EditText) findViewById(R.id.newItemDescription);
 		Button confirmButton = (Button) findViewById(R.id.newItemConfirmButton);
 		Button newItemButton = (Button) findViewById(R.id.addNewItemButton);
+		Button finishedItemButton = (Button) findViewById(R.id.addNewItemFinishedButton);
 				
 		confirmButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -65,6 +64,16 @@ public class ItemEdit extends Activity{
 				mItemDescriptionText.setText("");
 			}
 		});
+		
+		finishedItemButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent mIntent = new Intent();
+				setResult(RESULT_OK, mIntent);
+				finish();
+			}
+		});
 	}
 	
 	private void print_msg(String message, int duration){
@@ -72,7 +81,4 @@ public class ItemEdit extends Activity{
 		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(100);
 	}
-	
-	
-	
 }

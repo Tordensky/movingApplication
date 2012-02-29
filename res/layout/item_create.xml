@@ -43,17 +43,24 @@
    		
     	<Button 
     	    android:id="@+id/newItemConfirmButton" 
-	 		android:text="@string/confirmBoxDet"
-			android:layout_width="fill_parent"
+	 		android:text="@string/newItemButtonText"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"/>
+			/>
     	
  	    <Button 
     	    android:id="@+id/addNewItemButton" 
-	 		android:text="@string/confirmBoxDet"
-			android:layout_width="fill_parent"
+	 		android:text="@string/newItemAndNewButtonText"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"/>
+			/>
+ 	    
+ 	    <Button 
+    	    android:id="@+id/addNewItemFinishedButton" 
+	 		android:text="@string/newItemFinishedButtonText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			/>
 	    		
     </LinearLayout>
     	
