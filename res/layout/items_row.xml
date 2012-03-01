@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/linearLayout1" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
-    <ImageView android:id="@+id/imageView1" android:src="@drawable/puzzle" android:paddingRight="10sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></ImageView>
-	<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/linearLayout2" android:orientation="vertical" android:layout_gravity="center_vertical">
-		<TextView android:layout_width="wrap_content" android:text="Item Name" android:id="@+id/itemName" android:textSize="22sp" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
-		<TextView android:layout_width="wrap_content" android:textColor="#A6A6A6" android:text="This is the item" android:id="@+id/itemDescription" android:textSize="12sp" android:layout_height="wrap_content" android:layout_gravity="center_vertical"></TextView>
+<LinearLayout 
+    	android:id="@+id/linearLayout1" 
+    	android:orientation="horizontal" 
+    	android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content"
+    	android:layout_gravity="center_vertical"
+    	xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <ImageView 
+        android:id="@+id/itemListImage" 
+        android:src="@drawable/puzzle" 
+        android:paddingRight="10sp" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:layout_gravity="center_vertical"/>
+
+	<LinearLayout
+	    android:id="@+id/itemListText" 
+	    android:layout_width="match_parent" 
+	    android:layout_height="wrap_content"  
+	    android:orientation="vertical"
+	    android:layout_gravity="center_vertical" 
+	    >
+			
+			<TextView
+   			    android:id="@+id/itemName" 
+			    android:text="Item Name" 
+			    android:layout_width="wrap_content"  
+			    android:textSize="22sp" 
+			    android:layout_height="wrap_content" 
+			    android:layout_gravity="center_vertical"/>
+			
+			<TextView
+   			    android:id="@+id/itemDescription"  
+			    android:layout_width="wrap_content" 
+			    android:textColor="#A6A6A6" 
+			    android:text="This is the item" 
+			    android:textSize="12sp" 
+			    android:layout_height="wrap_content" 
+			    android:layout_gravity="center_vertical"/>
 	</LinearLayout>
 </LinearLayout>

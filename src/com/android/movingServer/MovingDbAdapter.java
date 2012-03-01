@@ -96,6 +96,11 @@ public class MovingDbAdapter {
      */
     public long createBox(String Name, String Description) {
     	ContentValues initialValues = new ContentValues();
+    	
+    	if (Description.length() > 1){
+    		Description = Description.substring(0,1).toUpperCase()+Description.substring(1).toLowerCase();	
+    	}
+    	
     	initialValues.put(KEY_BOX_NAME, Name.toUpperCase());
     	initialValues.put(KEY_BOX_DESC, Description);
     	
@@ -131,6 +136,11 @@ public class MovingDbAdapter {
 
 	public boolean editBox(Long boxID, String newBoxName, String newBoxDescription) {
         ContentValues args = new ContentValues();
+        
+        if (newBoxDescription.length() > 1){
+    		newBoxDescription = newBoxDescription.substring(0,1).toUpperCase()+newBoxDescription.substring(1).toLowerCase();	
+    	}
+        
         args.put(KEY_BOX_NAME, newBoxName.toUpperCase());
         args.put(KEY_BOX_DESC, newBoxDescription);
 

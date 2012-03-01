@@ -84,7 +84,7 @@ public class MovingApplicationActivity extends ListActivity {
     	
     	String[] from = new String[]{MovingDbAdapter.KEY_BOX_NAME, MovingDbAdapter.KEY_BOX_DESC};
     	
-    	int[] to = new int[]{R.id.name, R.id.description};
+    	int[] to = new int[]{R.id.boxName, R.id.boxDescription};
     	
     	SimpleCursorAdapter boxes =
     		new SimpleCursorAdapter(this, R.layout.box_row, mMovingCursor, from, to);
@@ -114,8 +114,6 @@ public class MovingApplicationActivity extends ListActivity {
         return super.onMenuItemSelected(featureId, item);
     }
     
-
-
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {

@@ -37,8 +37,8 @@ public class itemList extends ListActivity{
 		mDbHelper = new MovingDbAdapter(this);
         mDbHelper.open();
         
-        boxName = (TextView)findViewById(R.id.itemListBoxName); 
-        boxDescription = (TextView)findViewById(R.id.itemListBoxDescription);
+        boxName = (TextView)findViewById(R.id.boxName); 
+        boxDescription = (TextView)findViewById(R.id.boxDescription);
         
 		fillData();
 		

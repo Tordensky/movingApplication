@@ -3,8 +3,9 @@
   				android:layout_width="fill_parent"
    				android:layout_height="fill_parent" 
    				android:orientation="vertical">
-   
-    <LinearLayout
+
+    <include android:id="@+id/itemListCurrentBox" layout="@layout/box_row" android:layout_gravity="top"/>
+<!--     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/itemBoxClickable"
         android:layout_width="fill_parent"
@@ -59,7 +60,7 @@
 					    		android:layout_gravity="bottom"></TextView>
 			</LinearLayout>				
 		</LinearLayout>
-	</LinearLayout>
+	</LinearLayout> -->
     
     <ImageView
         android:id="@+id/imageView2"

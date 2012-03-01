@@ -10,25 +10,39 @@
 
 		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" 
-			android:text="@string/boxName" />
+			android:text="@string/boxName"
+			android:padding="5dip" />
 		
 		<EditText android:id="@+id/name" 
 		  	android:layout_width="0dip"
 			android:layout_height="wrap_content"
 			android:hint="@string/boxNameHint" 
-			android:layout_weight="1"/>
+			android:layout_weight="1"
+			android:singleLine="true"
+			android:padding="5dip"
+	        android:background="@drawable/rounded_edittext"
+			/>
+		
 	</LinearLayout>
 
-	<TextView android:layout_width="wrap_content"
+	<TextView 
+	    android:layout_width="wrap_content"
 		android:layout_height="wrap_content" 
 		android:text="@string/boxDescription" />
-	<EditText android:id="@+id/description" android:layout_width="match_parent"
+	
+	<EditText 
+	    android:id="@+id/description" 
+	    android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_weight="1"
 		android:scrollbars="vertical"
 		android:gravity="top"
 		android:hint="@string/boxDescHint"
+		android:lines="2"
+		android:inputType="textMultiLine"
+		android:padding="5dip"
+        android:background="@drawable/rounded_edittext"
 		/>	
+	
 	<Button android:id="@+id/confirm" 
 	 	android:text="@string/confirmBoxDet"
 		android:layout_width="wrap_content"
