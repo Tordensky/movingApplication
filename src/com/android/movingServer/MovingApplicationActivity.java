@@ -147,10 +147,6 @@ public class MovingApplicationActivity extends ListActivity {
 		
     	case CREATE_TAG:
     		createTag(info.id);
-    		
-    		//Intent ci = new Intent(this, CreateTag.class);
-    		//ci.putExtra(MovingDbAdapter.KEY_BOX_ID, info.id);
-    		//startActivityForResult(ci, ACTIVTY_CREATE_TAG);
     		return true;
     	}
     	
@@ -203,10 +199,8 @@ public class MovingApplicationActivity extends ListActivity {
     	super.onActivityResult(requestCode, resultCode, intent);
     	
     	Bundle extras;
-    	
-    	
 		extras = intent.getExtras();
-
+		
     	switch(requestCode){
         
         case ACTIVITY_CREATE_BOX:
@@ -220,7 +214,8 @@ public class MovingApplicationActivity extends ListActivity {
             	BoxDescription = "no description";
             }
         	
-        	mDbHelper.createBox(BoxName, BoxDescription);
+        	
+        	gotoBox(mDbHelper.createBox(BoxName, BoxDescription));
         	fillData();
         	break;
         

@@ -34,9 +34,10 @@ public final class R {
         public static final int boxListViewSearchBox=0x7f050003;
         public static final int boxLocation=0x7f050009;
         public static final int boxName=0x7f050007;
-        public static final int button1=0x7f050018;
         public static final int confirm=0x7f050002;
         public static final int description=0x7f050001;
+        public static final int gotoBoxMenuButton=0x7f050018;
+        public static final int gotoSearchMenuButton=0x7f050019;
         public static final int imageView1=0x7f050017;
         public static final int imageView2=0x7f050011;
         public static final int itemDescription=0x7f050016;
@@ -49,11 +50,11 @@ public final class R {
         public static final int newItemConfirmButton=0x7f05000d;
         public static final int newItemDescription=0x7f05000c;
         public static final int newItemName=0x7f05000b;
-        public static final int searchBox=0x7f05001a;
-        public static final int searchBoxQuitButton=0x7f05001d;
-        public static final int searchBoxesInputField=0x7f05001c;
-        public static final int searchText=0x7f05001b;
-        public static final int textView1=0x7f050019;
+        public static final int searchBox=0x7f05001b;
+        public static final int searchBoxQuitButton=0x7f05001e;
+        public static final int searchBoxesInputField=0x7f05001d;
+        public static final int searchText=0x7f05001c;
+        public static final int textView1=0x7f05001a;
     }
     public static final class layout {
         public static final int box_edit=0x7f030000;

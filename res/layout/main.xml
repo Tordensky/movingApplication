@@ -23,19 +23,21 @@
         android:padding="10px" >
     
 	    <Button
-	        android:id="@+id/button1"
+	        android:id="@+id/gotoBoxMenuButton"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:text="Boxes"
+	        android:text="View Boxes"
+	        android:textSize="40px"
 	        android:padding="20px"
 	        android:background="@drawable/button"
 	         />
 	    
 	    <Button
-	        android:id="@+id/button1"
+	        android:id="@+id/gotoSearchMenuButton"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:text="Search"
+	        android:text="View Items"
+	        android:textSize="40px"
 	        android:padding="20px"
 	        android:background="@drawable/button"
 	         />
