@@ -12,14 +12,16 @@ public final class R {
     }
     public static final class drawable {
         public static final int box=0x7f020000;
-        public static final int icon=0x7f020001;
-        public static final int iconold=0x7f020002;
-        public static final int line=0x7f020003;
-        public static final int logo=0x7f020004;
-        public static final int puzzle=0x7f020005;
-        public static final int rounded_button=0x7f020006;
-        public static final int rounded_edittext=0x7f020007;
-        public static final int scanntag=0x7f020008;
+        public static final int button=0x7f020001;
+        public static final int icon=0x7f020002;
+        public static final int iconold=0x7f020003;
+        public static final int line=0x7f020004;
+        public static final int logo=0x7f020005;
+        public static final int main_menu_bkgr=0x7f020006;
+        public static final int puzzle=0x7f020007;
+        public static final int rounded_button=0x7f020008;
+        public static final int rounded_edittext=0x7f020009;
+        public static final int scanntag=0x7f02000a;
     }
     public static final class id {
         public static final int addNewItemButton=0x7f05000e;
@@ -33,9 +35,6 @@ public final class R {
         public static final int boxLocation=0x7f050009;
         public static final int boxName=0x7f050007;
         public static final int button1=0x7f050018;
-        public static final int button2=0x7f050019;
-        public static final int button3=0x7f05001a;
-        public static final int button4=0x7f05001b;
         public static final int confirm=0x7f050002;
         public static final int description=0x7f050001;
         public static final int imageView1=0x7f050017;
@@ -50,11 +49,11 @@ public final class R {
         public static final int newItemConfirmButton=0x7f05000d;
         public static final int newItemDescription=0x7f05000c;
         public static final int newItemName=0x7f05000b;
-        public static final int searchBox=0x7f05001d;
-        public static final int searchBoxQuitButton=0x7f050020;
-        public static final int searchBoxesInputField=0x7f05001f;
-        public static final int searchText=0x7f05001e;
-        public static final int textView1=0x7f05001c;
+        public static final int searchBox=0x7f05001a;
+        public static final int searchBoxQuitButton=0x7f05001d;
+        public static final int searchBoxesInputField=0x7f05001c;
+        public static final int searchText=0x7f05001b;
+        public static final int textView1=0x7f050019;
     }
     public static final class layout {
         public static final int box_edit=0x7f030000;

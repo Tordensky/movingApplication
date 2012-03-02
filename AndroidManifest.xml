@@ -8,18 +8,22 @@
  	<uses-permission android:name="android.permission.VIBRATE" />
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".MovingApplicationActivity"
+        <activity android:name="MovingApplicationActivity"
                   android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            
         </activity>
         <activity android:name="BoxEdit"></activity>
         <activity android:name="itemList"></activity>
         <activity android:name="CreateTag"></activity>
         <activity android:name="ItemEdit"></activity>
         <activity android:name="ReadTag"></activity>
+        <activity android:name="Client">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+        </activity>
 
     </application>
 </manifest>
