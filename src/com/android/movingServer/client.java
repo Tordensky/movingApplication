@@ -3,7 +3,7 @@ package com.android.movingServer;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class client extends Activity {
+public class Client extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
