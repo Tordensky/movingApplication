@@ -8,7 +8,18 @@
         android:background="#000000"
         >
         
-	    <EditText
+        <TextView 	
+       	    android:id="@+id/searchText"
+       		android:layout_width="wrap_content"
+       		android:layout_height="wrap_content"
+       		android:layout_alignParentLeft="true"
+       		android:layout_centerInParent="true"
+       		android:text="@string/search"
+       		android:textSize="20sp"
+       		android:padding="5dp"
+       		/>
+        
+    	<EditText
 	        android:id="@+id/searchBoxesInputField"
 	        android:layout_toRightOf="@+id/searchText"
 	        android:layout_width="fill_parent"
@@ -19,14 +30,17 @@
 	        android:singleLine="true"
 	        />    
 	        
-          <TextView 	
-       	    android:id="@+id/searchText"
-       		android:layout_width="wrap_content"
-       		android:layout_height="wrap_content"
-       		android:layout_alignParentLeft="true"
-       		android:layout_centerInParent="true"
-       		android:text="@string/search"
-       		android:textSize="20sp"
-       		android:padding="5dp"
-       		/>
+    	<Button 
+    	    android:id="@+id/searchBoxQuitButton"
+    	    android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_centerInParent="true"
+	        android:text=" X "
+	        android:padding="5dip"
+	        android:background="@drawable/rounded_edittext"
+    	    />
+
+          
+   
     </RelativeLayout>
