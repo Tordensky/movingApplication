@@ -14,20 +14,22 @@ public class Search extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.box_list);
+		mDbHelper = new MovingDbAdapter(this);
+        mDbHelper.open();
 		fillData();
 	}
 	
 	private void fillData(){
-    	mMovingCursor = mDbHelper.fetchAllItemsFromBox((long)10);
+    	mMovingCursor = mDbHelper.fetchAllITemsFromBoxesWhere("");//fetchAllITemsFromBoxesWhere("");
     	
     	startManagingCursor(mMovingCursor);
     	
-    	String[] from = new String[]{MovingDbAdapter.KEY_ITEM_NAME, MovingDbAdapter.KEY_ITEM_DESC};
+    	String[] from = new String[]{MovingDbAdapter.KEY_ITEM_NAME , MovingDbAdapter.KEY_ITEM_DESC, MovingDbAdapter.KEY_BOX_NAME};
     	
-    	int[] to = new int[]{R.id.itemName, R.id.itemDescription};
+    	int[] to = new int[]{R.id.itemName, R.id.itemDescription, R.id.itemBox};
     	
     	SimpleCursorAdapter items =
-    		new SimpleCursorAdapter(this, R.layout.items_row, mMovingCursor, from, to);
+    		new SimpleCursorAdapter(this, R.layout.search_items_row, mMovingCursor, from, to);
     	setListAdapter(items);
 	}
 

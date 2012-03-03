@@ -40,6 +40,7 @@ public final class R {
         public static final int gotoSearchMenuButton=0x7f050019;
         public static final int imageView1=0x7f050017;
         public static final int imageView2=0x7f050011;
+        public static final int itemBox=0x7f05001f;
         public static final int itemDescription=0x7f050016;
         public static final int itemListCurrentBox=0x7f050010;
         public static final int itemListImage=0x7f050013;
@@ -66,6 +67,7 @@ public final class R {
         public static final int main=0x7f030006;
         public static final int scann_tag=0x7f030007;
         public static final int search_box=0x7f030008;
+        public static final int search_items_row=0x7f030009;
     }
     public static final class string {
         public static final int addBoxMenu=0x7f040003;

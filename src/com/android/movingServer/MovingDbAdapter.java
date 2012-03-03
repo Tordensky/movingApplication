@@ -174,12 +174,13 @@ public class MovingDbAdapter {
     
     public Cursor fetchAllItemsFromBox(long boxID) {
     	return mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_ID, KEY_ITEM_NAME, KEY_ITEM_DESC}, 
-    			KEY_ITEM_BOX_ID + "=" + boxID, null, null, null, null);
+    			KEY_ITEM_BOX_ID + "=" + boxID, null, null, null, KEY_ITEM_NAME + " ASC");
     }
     
     public Cursor fetchAllITemsFromBoxesWhere(String search){
-    	return mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_ID, KEY_ITEM_NAME, KEY_ITEM_DESC}, 
-    			null, null, null, null, null);
+    	String where = DATABASE_BOX_TABLE+"."+KEY_BOX_ID + " = " + KEY_ITEM_BOX_ID; 
+    	return mDb.query(DATABASE_ITEM_TABLE + ", " + DATABASE_BOX_TABLE, new String[] {DATABASE_ITEM_TABLE+"."+KEY_ITEM_ID, KEY_ITEM_NAME, KEY_ITEM_DESC, KEY_BOX_NAME}, 
+    			where, null, null, null, KEY_ITEM_NAME + " ASC");
     }
 
 	public boolean deleteItem(long rowId) {
