@@ -1,13 +1,21 @@
 package com.android.movingServer;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class Search extends ListActivity {
 
@@ -17,15 +25,17 @@ public class Search extends ListActivity {
 	private EditText itemSearchField;
 	private String itemSearchString;
 	
+	private static final int DELETE_ID = Menu.FIRST;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.box_list);
+		
 		mDbHelper = new MovingDbAdapter(this);
         mDbHelper.open();
         
         itemSearchField =(EditText) findViewById(R.id.searchBoxesInputField);
-        
         itemSearchField.addTextChangedListener(new TextWatcher() {
 			
 			@Override
@@ -48,11 +58,14 @@ public class Search extends ListActivity {
 		});
         
 		fillData();
+		
+		registerForContextMenu(getListView());
 	}
 	
 	private void fillData(){
-		Toast.makeText(this, "Fill data", 1000).show();
-    	mMovingCursor = mDbHelper.fetchAllITemsFromBoxesWhere(itemSearchString);//fetchAllITemsFromBoxesWhere("");
+		
+    	
+		mMovingCursor = mDbHelper.fetchAllITemsFromBoxesWhere(itemSearchString);
     	
     	startManagingCursor(mMovingCursor);
     	
@@ -63,6 +76,41 @@ public class Search extends ListActivity {
     	SimpleCursorAdapter items =
     		new SimpleCursorAdapter(this, R.layout.search_items_row, mMovingCursor, from, to);
     	setListAdapter(items);
+	}
+	
+	 protected void onListItemClick(ListView l, View v, int position, long id){
+	    	super.onListItemClick(l, v, position, id);
+	    	gotoBox(mDbHelper.boxIdFromItemId(id));
+	    }
+	 
+	 private void gotoBox(long BID){
+	    	Intent i = new Intent(this, itemList.class);
+	    	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
+	    	startActivity(i);
+	    }
+	 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, DELETE_ID, 0, R.string.itemListMenuDelete);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		
+		Toast.makeText(this, "Fill data", 1000).show();
+		
+		switch (item.getItemId()){
+		
+		case DELETE_ID:
+			mDbHelper.deleteItem(info.id);
+			fillData();
+			return true;
+		}		
+		
+		return super.onContextItemSelected(item);
 	}
 
 }

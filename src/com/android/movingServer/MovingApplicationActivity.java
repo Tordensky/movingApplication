@@ -252,8 +252,6 @@ public class MovingApplicationActivity extends ListActivity {
         	Log.w("ACTIVITY READ", "Kommer hit");
         	break;
     	}
-    	
-    	
-    }
-    		
+
+    }		
 }

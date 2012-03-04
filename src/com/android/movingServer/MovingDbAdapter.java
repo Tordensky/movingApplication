@@ -192,6 +192,13 @@ public class MovingDbAdapter {
     	return mDb.query(DATABASE_ITEM_TABLE + ", " + DATABASE_BOX_TABLE, new String[] {DATABASE_ITEM_TABLE+"."+KEY_ITEM_ID, KEY_ITEM_NAME, KEY_ITEM_DESC, KEY_BOX_NAME}, 
     			where, null, null, null, KEY_ITEM_NAME + " ASC");
     }
+    
+    public long boxIdFromItemId(long IID){
+    	
+		Cursor tmpCursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_BOX_ID}, KEY_ITEM_ID + "=" +IID,null,null,null,null);
+    	tmpCursor.moveToFirst();
+    	return tmpCursor.getLong(0);
+    }
 
 	public boolean deleteItem(long rowId) {
 		return mDb.delete(DATABASE_ITEM_TABLE, KEY_ITEM_ID + "=" + rowId, null) > 0;

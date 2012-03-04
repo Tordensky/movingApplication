@@ -4,16 +4,22 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class itemList extends ListActivity{
 
 	private static final int ACTIVITY_CREATE_ITEM = 0;
 	
 	private static final int INSERT_ID = Menu.FIRST;
+	private static final int DELETE_ID = Menu.FIRST + 5;
 	
 	private MovingDbAdapter mDbHelper;
 	private Cursor mMovingCursor;
@@ -69,12 +75,13 @@ public class itemList extends ListActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, INSERT_ID, 0, R.string.addItemMenu);
+        menu.add(1, INSERT_ID, 0, R.string.addItemMenu).getItemId();
         return true;
     }
     
+    
     @Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
     	switch (item.getItemId()){
 		case INSERT_ID:
 			
@@ -98,5 +105,30 @@ public class itemList extends ListActivity{
 	    Intent mIntent = new Intent();
 	    setResult(RESULT_OK, mIntent);
 	    super.onBackPressed();
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, DELETE_ID, 0, R.string.itemListMenuDelete);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		
+		Toast.makeText(this, "Fill data", 1000).show();
+		
+		switch (item.getItemId()){
+		
+		case DELETE_ID:
+			mDbHelper.deleteItem(info.id);
+			fillData();
+			return true;
+		}		
+		
+		return super.onContextItemSelected(item);;
 	}
 }

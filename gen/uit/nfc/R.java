@@ -82,6 +82,7 @@ public final class R {
         public static final int boxNameHint=0x7f040006;
         public static final int confirmBoxDet=0x7f040008;
         public static final int hello=0x7f040000;
+        public static final int itemListMenuDelete=0x7f040013;
         public static final int newItemAndNewButtonText=0x7f04000e;
         public static final int newItemButtonText=0x7f04000f;
         public static final int newItemFinishedButtonText=0x7f040010;

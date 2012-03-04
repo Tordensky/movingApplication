@@ -17,4 +17,5 @@
     <string name="newItemFinishedButtonText">Cancel</string>
     <string name="search">Search</string>
     <string name="searchBoxHint">tap to search</string>
+    <string name="itemListMenuDelete">Delete Item</string>
 </resources>
