@@ -178,7 +178,17 @@ public class MovingDbAdapter {
     }
     
     public Cursor fetchAllITemsFromBoxesWhere(String search){
-    	String where = DATABASE_BOX_TABLE+"."+KEY_BOX_ID + " = " + KEY_ITEM_BOX_ID; 
+    	if (search == null){
+    		search = "";
+    	}
+    	search = search.toLowerCase();
+    	
+    	String where = 	DATABASE_BOX_TABLE+"."+KEY_BOX_ID + " = " + KEY_ITEM_BOX_ID + " AND (" +
+    					KEY_ITEM_NAME.toLowerCase() + " LIKE '%" + search + "%' or " +
+    					KEY_ITEM_DESC.toLowerCase() + " LIKE '%" + search + "%' or " +
+						KEY_BOX_NAME.toLowerCase() + " LIKE '%" + search + "%') ";
+    	
+    	
     	return mDb.query(DATABASE_ITEM_TABLE + ", " + DATABASE_BOX_TABLE, new String[] {DATABASE_ITEM_TABLE+"."+KEY_ITEM_ID, KEY_ITEM_NAME, KEY_ITEM_DESC, KEY_BOX_NAME}, 
     			where, null, null, null, KEY_ITEM_NAME + " ASC");
     }
