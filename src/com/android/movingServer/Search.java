@@ -33,7 +33,7 @@ public class Search extends ListActivity {
 		setContentView(R.layout.box_list);
 		
 		mDbHelper = new MovingDbAdapter(this);
-        mDbHelper.open();
+        
         
         itemSearchField =(EditText) findViewById(R.id.searchBoxesInputField);
         itemSearchField.addTextChangedListener(new TextWatcher() {
@@ -64,7 +64,7 @@ public class Search extends ListActivity {
 	
 	private void fillData(){
 		
-    	
+		mDbHelper.open();
 		mMovingCursor = mDbHelper.fetchAllITemsFromBoxesWhere(itemSearchString);
     	
     	startManagingCursor(mMovingCursor);
@@ -76,16 +76,19 @@ public class Search extends ListActivity {
     	SimpleCursorAdapter items =
     		new SimpleCursorAdapter(this, R.layout.search_items_row, mMovingCursor, from, to);
     	setListAdapter(items);
+    	mDbHelper.close();
 	}
 	
 	 protected void onListItemClick(ListView l, View v, int position, long id){
 	    	super.onListItemClick(l, v, position, id);
+	    	mDbHelper.open();
 	    	gotoBox(mDbHelper.boxIdFromItemId(id));
 	    }
 	 
 	 private void gotoBox(long BID){
 	    	Intent i = new Intent(this, itemList.class);
 	    	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
+	    	mDbHelper.close();
 	    	startActivity(i);
 	    }
 	 
@@ -96,6 +99,7 @@ public class Search extends ListActivity {
 		menu.add(0, DELETE_ID, 0, R.string.itemListMenuDelete);
 	}
 	
+	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -105,12 +109,20 @@ public class Search extends ListActivity {
 		switch (item.getItemId()){
 		
 		case DELETE_ID:
+			mDbHelper.open();
 			mDbHelper.deleteItem(info.id);
+			mDbHelper.close();
 			fillData();
 			return true;
 		}		
 		
 		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		fillData();
 	}
 
 }

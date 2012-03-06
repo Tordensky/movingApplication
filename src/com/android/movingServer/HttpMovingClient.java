@@ -10,12 +10,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import com.android.movingServer.Client.ResponseReceiver;
-
 import android.app.IntentService;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -30,30 +26,32 @@ public class HttpMovingClient extends IntentService {
 	}
 
 	private final IBinder mBinder = new MyBinder();
-	private static final long UPDATE_INTERVAL = 10000;
+	private static final long UPDATE_INTERVAL = 60000;
 	private Timer timer = new Timer();
 	
-	private MovingDbAdapter mDbHelper;
+
+	private UpdateHandler updateHandler;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		executeHttpGetTimer();
+		updateHandler = new UpdateHandler(this);
 	}
 	
-	
 	public void executeHttpGetTimer(){
-		timer.scheduleAtFixedRate(new TimerTask() {		
-			@Override
-			public void run() {
+		//timer.scheduleAtFixedRate(new TimerTask() {		
+			//@Override
+			//public void run() {
 				try {
 					executeHttpGet();
+					
 				} catch (Exception e) {
 					print("ERROR IN TIMER");
 					e.printStackTrace();
 				}
-			}
-		}, 0, UPDATE_INTERVAL);
+//			}
+//		}, 0, UPDATE_INTERVAL);
 	}
 	
 
@@ -63,7 +61,7 @@ public class HttpMovingClient extends IntentService {
 		try {
 			HttpClient movingClient = new DefaultHttpClient();
 			
-			HttpGet getTest = new HttpGet(new URI("http://129.242.115.12:4500"));
+			HttpGet getTest = new HttpGet(new URI("http://129.242.115.12:4500/"));
 
 			HttpResponse response = movingClient.execute(getTest);
 
@@ -75,12 +73,13 @@ public class HttpMovingClient extends IntentService {
 			String NL = System.getProperty("line.separator");
 
 			while((line = input.readLine()) != null) {
-				sb.append(line + NL);
+				sb.append(line);
 			}
 
 			input.close();
-			String page = sb.toString();
-			print (page);
+			String result = sb.toString();
+			print (result);
+			updateHandler.updateFromInput(result);
 			broadcastUpdate();
 
 		} finally {
@@ -115,7 +114,7 @@ public class HttpMovingClient extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {		
-		broadcastUpdate();
+		
 
 	}
 	
@@ -128,6 +127,7 @@ public class HttpMovingClient extends IntentService {
 
 	
 	private void broadcastUpdate(){
+		
 		/*Sends Response to application*/
 		Intent broadcastIntent = new Intent();
 		broadcastIntent.setAction(ResponseReceiver.ACTION_RESP);

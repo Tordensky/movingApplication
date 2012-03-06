@@ -1,7 +1,12 @@
 package com.android.movingServer;
 
+import com.android.movingServer.Client.ResponseReceiver;
+
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -37,6 +42,8 @@ public class MovingApplicationActivity extends ListActivity {
 	
 	private EditText boxSearchField;
 	private String boxSearchString;
+	
+	private ResponseReceiver receiver;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,12 @@ public class MovingApplicationActivity extends ListActivity {
 				
 			}
 		});
+        
+/*        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new ResponseReceiver();
+        registerReceiver(receiver, filter);*/
+		
         
         registerForContextMenu(getListView());
     }
@@ -253,5 +266,16 @@ public class MovingApplicationActivity extends ListActivity {
         	break;
     	}
 
-    }		
+    }
+    
+	public class ResponseReceiver extends BroadcastReceiver {
+		public static final String ACTION_RESP =
+		      "com.mamlambo.intent.action.MESSAGE_PROCESSED";
+
+		@Override
+		public void onReceive(Context arg0, Intent arg1) {
+			// TODO Auto-generated method stub
+			fillData();
+		}	
+	}
 }

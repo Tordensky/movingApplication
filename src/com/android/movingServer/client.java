@@ -65,11 +65,11 @@ public class Client extends Activity {
 	
 
 	@Override
-	protected void onDestroy() {
+	protected void onStop() {
 		// TODO Auto-generated method stub
+		
+		stopService(new Intent(this, HttpMovingClient.class));
 		super.onDestroy();
-		stopService(new Intent(Client.this,HttpMovingClient.class));
-
 	}
 	
 	private void startHttpService() {
@@ -93,5 +93,11 @@ public class Client extends Activity {
 			print_msg("DETTE FUNKA FADERMEG", 1000);
 		}	
 	}
+
+/*	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+	}*/
 
 }
