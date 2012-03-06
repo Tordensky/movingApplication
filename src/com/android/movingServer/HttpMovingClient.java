@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 
 public class HttpMovingClient extends IntentService {
@@ -108,18 +109,23 @@ public class HttpMovingClient extends IntentService {
 	}
 
 	private void print (String Text){
-		Log.i(getClass().getSimpleName(), "TIMER EVENT PRINT --< FUCK YEAH >--" + Text);
+		Log.i(getClass().getSimpleName(), "TIMER EVENT PRINT --< "+Text+" >--");
 		//Toast.makeText(this, Text, 1000).show();
 	}
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
-		
-		
+	protected void onHandleIntent(Intent intent) {		
 		broadcastUpdate();
 
-		
 	}
+	
+    @Override
+    public void onDestroy() {
+
+        // Tell the user we stopped.
+        Toast.makeText(this, "SERVICE CLOSED", Toast.LENGTH_SHORT).show();
+    }
+
 	
 	private void broadcastUpdate(){
 		/*Sends Response to application*/
