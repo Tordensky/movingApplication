@@ -38,6 +38,7 @@ public class itemList extends ListActivity{
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			CurrentBoxID = extras.getLong(MovingDbAdapter.KEY_BOX_ID);
+			
 		}
 		
 		mDbHelper = new MovingDbAdapter(this);
@@ -129,6 +130,6 @@ public class itemList extends ListActivity{
 			return true;
 		}		
 		
-		return super.onContextItemSelected(item);;
+		return super.onContextItemSelected(item);
 	}
 }
