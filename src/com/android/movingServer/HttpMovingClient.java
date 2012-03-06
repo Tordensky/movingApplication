@@ -11,18 +11,25 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.android.movingServer.Client.ResponseReceiver;
+
 import android.app.IntentService;
-import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
-public class HttpMovingClient extends Service {
+
+public class HttpMovingClient extends IntentService {
+
+	public HttpMovingClient() {
+		super("SOME NAME");
+	}
 
 	private final IBinder mBinder = new MyBinder();
-	private static final long UPDATE_INTERVAL = 5000;
+	private static final long UPDATE_INTERVAL = 10000;
 	private Timer timer = new Timer();
 	
 	private MovingDbAdapter mDbHelper;
@@ -32,7 +39,8 @@ public class HttpMovingClient extends Service {
 		super.onCreate();
 		executeHttpGetTimer();
 	}
-
+	
+	
 	public void executeHttpGetTimer(){
 		timer.scheduleAtFixedRate(new TimerTask() {		
 			@Override
@@ -46,7 +54,7 @@ public class HttpMovingClient extends Service {
 			}
 		}, 0, UPDATE_INTERVAL);
 	}
-
+	
 
 	public void executeHttpGet() throws Exception {
 
@@ -54,7 +62,7 @@ public class HttpMovingClient extends Service {
 		try {
 			HttpClient movingClient = new DefaultHttpClient();
 			
-			HttpGet getTest = new HttpGet(new URI("http://129.242.115.12:4500/login"));
+			HttpGet getTest = new HttpGet(new URI("http://129.242.115.12:4500"));
 
 			HttpResponse response = movingClient.execute(getTest);
 
@@ -72,6 +80,7 @@ public class HttpMovingClient extends Service {
 			input.close();
 			String page = sb.toString();
 			print (page);
+			broadcastUpdate();
 
 		} finally {
 			if (input != null) {
@@ -88,7 +97,8 @@ public class HttpMovingClient extends Service {
 	@Override
 	public IBinder onBind(Intent arg0) {
 		// TODO Auto-generated method stub
-		return mBinder;
+		/*return mBinder;*/
+		return null;
 	}
 
 	public class MyBinder extends Binder {
@@ -102,4 +112,20 @@ public class HttpMovingClient extends Service {
 		//Toast.makeText(this, Text, 1000).show();
 	}
 
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		
+		
+		broadcastUpdate();
+
+		
+	}
+	
+	private void broadcastUpdate(){
+		/*Sends Response to application*/
+		Intent broadcastIntent = new Intent();
+		broadcastIntent.setAction(ResponseReceiver.ACTION_RESP);
+		broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+		sendBroadcast(broadcastIntent);
+	}
 }

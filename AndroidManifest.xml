@@ -28,6 +28,7 @@
         </activity>
         <activity android:name="Search"></activity>
         <service android:name="HttpMovingClient"></service>
+       
 
 
     </application>
