@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
@@ -19,12 +20,30 @@ public class Client extends Activity {
 	private HttpMovingClient httpService;
 	
 	private ResponseReceiver receiver;
+	
+	public static final String PREFS_NAME = "MyPrefsFile";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
+		setupMainMenu();
+		
+        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new ResponseReceiver();
+        registerReceiver(receiver, filter);
+		
+        setupSharedPreferences();
+        
+		startHttpService();
+		
+		//doBindService();
+	}
+	
+	private void setupMainMenu(){
 		Button gotoBoxMenuButton = (Button) findViewById(R.id.gotoBoxMenuButton);
 		Button gotoSearchMenuButton = (Button) findViewById(R.id.gotoSearchMenuButton);
 		
@@ -37,21 +56,23 @@ public class Client extends Activity {
 		});
 		
 		gotoSearchMenuButton.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				startSearchAction();
 			}
 		});
-		
-        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
-        receiver = new ResponseReceiver();
-        registerReceiver(receiver, filter);
-		
-		startHttpService();
-		//doBindService();
 	}
+	
+	private void setupSharedPreferences(){
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		
+		if (settings.getLong("lastConnectionTimeStamp", 0) == 0){
+			editor.putLong("lastConnectionTimeStamp", 0);
+			editor.commit();
+		}
+	}
+	
 	
 	private void startBoxListAction(){
 		Intent i = new Intent(this, MovingApplicationActivity.class);
@@ -79,7 +100,7 @@ public class Client extends Activity {
 	
 	private void print_msg(String message, int duration){
 		Toast.makeText(this, message, duration).show();
-		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		//Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		//v.vibrate(100);
 	}
 	
@@ -93,6 +114,8 @@ public class Client extends Activity {
 			print_msg("DETTE FUNKA FADERMEG", 1000);
 		}	
 	}
+	
+	
 
 /*	@Override
 	protected void onStop() {

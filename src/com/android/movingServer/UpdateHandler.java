@@ -4,15 +4,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
-
-public class UpdateHandler {
+public class UpdateHandler{
 
 	private MovingDbAdapter mDbHelper;
 	
+	public static final String PREFS_NAME = "MyPrefsFile";
+	
+	private Context ownersContext;
+	
 	public UpdateHandler(Context context){
+		ownersContext = context;
 		mDbHelper = new MovingDbAdapter(context);
 	}
 	
@@ -20,8 +26,13 @@ public class UpdateHandler {
 		mDbHelper.open();
 		try {
 		
+		JSONObject json_message_body = new JSONObject(result);
+		
+		Log.i("RECEIVED TIME STAMP", json_message_body.getString("timeStamp"));
+		
+		
 		//InputStrem is = JsonParsing.class. 
-		JSONArray jArray = new JSONArray(result);
+		JSONArray jArray = new JSONArray(json_message_body.getString("boxes"));
 		for (int i = 0; i < jArray.length();i++){
 			JSONObject json_data = jArray.getJSONObject(i);
 			
@@ -36,7 +47,8 @@ public class UpdateHandler {
 				mDbHelper.createItem(boxID, json_item_data.getString("itemName"), json_item_data.getString("itemDescription"));
 			}
 		}
-		
+		// Everything is loaded OK, set time stamp for successful update
+		setConnectionTimeStamp(json_message_body.getLong("timeStamp"));
 		
 		} catch (JSONException e){
 			Log.e("log_tag", "Error parsing data "+e.toString());
@@ -44,5 +56,15 @@ public class UpdateHandler {
 		} finally {
 			mDbHelper.close();
 		}
+	}
+	
+	private void setConnectionTimeStamp(long timeStamp){
+		SharedPreferences settings = ownersContext.getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		
+		settings.getLong("lastConnectionTimeStamp", 0);
+		
+		editor.putLong("lastConnectionTimeStamp", timeStamp);
+		editor.commit();	
 	}
 }

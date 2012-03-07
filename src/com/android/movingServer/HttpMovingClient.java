@@ -13,6 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import com.android.movingServer.Client.ResponseReceiver;
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -22,21 +23,22 @@ import android.widget.Toast;
 public class HttpMovingClient extends IntentService {
 
 	public HttpMovingClient() {
-		super("SOME NAME");
+		super("HttpThread");
 	}
 
 	private final IBinder mBinder = new MyBinder();
 	private static final long UPDATE_INTERVAL = 60000;
-	private Timer timer = new Timer();
-	
+	//private Timer timer = new Timer();
+	public static final String PREFS_NAME = "MyPrefsFile";
 
 	private UpdateHandler updateHandler;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		executeHttpGetTimer();
 		updateHandler = new UpdateHandler(this);
+		executeHttpGetTimer();
+		
 	}
 	
 	public void executeHttpGetTimer(){
@@ -49,6 +51,8 @@ public class HttpMovingClient extends IntentService {
 				} catch (Exception e) {
 					print("ERROR IN TIMER");
 					e.printStackTrace();
+				} finally {
+					stopSelf();
 				}
 //			}
 //		}, 0, UPDATE_INTERVAL);
@@ -58,10 +62,18 @@ public class HttpMovingClient extends IntentService {
 	public void executeHttpGet() throws Exception {
 
 		BufferedReader input = null;
+		long lastConnTime = 0;
 		try {
 			HttpClient movingClient = new DefaultHttpClient();
 			
-			HttpGet getTest = new HttpGet(new URI("http://129.242.115.12:4500/"));
+			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+			SharedPreferences.Editor editor = settings.edit();
+			
+			lastConnTime = settings.getLong("lastConnectionTimeStamp", 0);
+			
+			
+			
+			HttpGet getTest = new HttpGet(new URI("http://129.242.115.12:4500/boxes/"+lastConnTime));
 
 			HttpResponse response = movingClient.execute(getTest);
 
@@ -70,7 +82,7 @@ public class HttpMovingClient extends IntentService {
 
 			StringBuffer sb = new StringBuffer("");
 			String line = "";
-			String NL = System.getProperty("line.separator");
+			//String NL = System.getProperty("line.separator");
 
 			while((line = input.readLine()) != null) {
 				sb.append(line);

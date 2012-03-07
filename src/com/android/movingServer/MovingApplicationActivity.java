@@ -78,10 +78,10 @@ public class MovingApplicationActivity extends ListActivity {
 			}
 		});
         
-/*        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new ResponseReceiver();
-        registerReceiver(receiver, filter);*/
+        registerReceiver(receiver, filter);
 		
         
         registerForContextMenu(getListView());

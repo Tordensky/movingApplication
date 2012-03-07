@@ -35,6 +35,7 @@ public class movingResponse implements ResponseListener  {
 			Log.i(getClass().getSimpleName(), "SomeTHingWrong --< in thread >--");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		
 		} finally {
 			if (input != null) {
 				try {
