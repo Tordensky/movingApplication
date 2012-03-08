@@ -27,8 +27,8 @@ public class HttpMovingClient extends IntentService {
 	}
 
 	private final IBinder mBinder = new MyBinder();
-	private static final long UPDATE_INTERVAL = 60000;
-	//private Timer timer = new Timer();
+	private static final long UPDATE_INTERVAL = 3000;
+	private Timer timer = new Timer();
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	private UpdateHandler updateHandler;
@@ -37,14 +37,14 @@ public class HttpMovingClient extends IntentService {
 	public void onCreate() {
 		super.onCreate();
 		updateHandler = new UpdateHandler(this);
-		executeHttpGetTimer();
+		
 		
 	}
 	
 	public void executeHttpGetTimer(){
-		//timer.scheduleAtFixedRate(new TimerTask() {		
+		timer.scheduleAtFixedRate(new TimerTask() {		
 			//@Override
-			//public void run() {
+		public void run() {
 				try {
 					executeHttpGet();
 					
@@ -52,10 +52,10 @@ public class HttpMovingClient extends IntentService {
 					print("ERROR IN TIMER");
 					e.printStackTrace();
 				} finally {
-					stopSelf();
+					//stopSelf();
 				}
-//			}
-//		}, 0, UPDATE_INTERVAL);
+			}
+		}, 0, UPDATE_INTERVAL);
 	}
 	
 
@@ -126,15 +126,15 @@ public class HttpMovingClient extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {		
-		
+		executeHttpGetTimer();
 
 	}
 	
     @Override
     public void onDestroy() {
-
+    	super.onDestroy();
         // Tell the user we stopped.
-        Toast.makeText(this, "SERVICE CLOSED", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "SERVICE DESTROYED", Toast.LENGTH_SHORT).show();
     }
 
 	
