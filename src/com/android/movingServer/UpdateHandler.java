@@ -22,6 +22,52 @@ public class UpdateHandler{
 		mDbHelper = new MovingDbAdapter(context);
 	}
 	
+	
+	public void updateFromSync(String body){
+		mDbHelper.open();
+		try {
+			JSONObject json_message_body = new JSONObject(body);
+			//JSONArray jArray = new JSONArray(json_message_body.getString("NewLocations"));
+			
+			createLocationsFromInput(new JSONArray(json_message_body.getString("NewLocations")));
+			createBoxesFromInput(new JSONArray(json_message_body.getString("NewBoxes")));
+			createItemsFromInput(new JSONArray(json_message_body.getString("NewItems")));
+			
+			setConnectionTimeStamp(json_message_body.getLong("TimeStamp"));
+			
+		} catch  (Exception e) {
+			e.printStackTrace();
+			Log.e("UPDATE FROM SYNC", "COULD NOT PARSE RESULT");
+		} finally {
+			mDbHelper.close();
+		}
+	}
+	
+	private void createLocationsFromInput(JSONArray locations) throws JSONException{
+		for (int i = 0; i < locations.length(); i++){
+			JSONObject location = locations.getJSONObject(i);
+			Log.i("LOCATION", location.toString());
+			mDbHelper.createLocationFromUpdate(location.getLong("LID"), location.getString("locationName"), location.getString("locationDescription"));
+			
+		}
+	}
+	
+	private void createBoxesFromInput(JSONArray boxes) throws JSONException{
+		for (int i = 0; i < boxes.length(); i++){
+			JSONObject box = boxes.getJSONObject(i);
+			Log.i("BOXES", box.toString());
+			mDbHelper.createBoxFromUpdate(box.getLong("BID"), box.getString("boxName"), box.getString("boxDescription"), box.getLong("boxLocation"));
+		}
+	}
+	
+	private void createItemsFromInput(JSONArray items) throws JSONException{
+		for (int i = 0; i < items.length(); i++){
+			JSONObject item = items.getJSONObject(i);
+			Log.i("ITEM", item.toString());
+			mDbHelper.createItemFromUpdate(item.getLong("IID"), item.getString("itemName"), item.getString("itemDescription"), item.getLong("BID"));
+		}
+	}
+		
 	public void updateFromInput(String result){
 		mDbHelper.open();
 		try {

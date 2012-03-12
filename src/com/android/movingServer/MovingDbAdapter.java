@@ -1,5 +1,7 @@
 package com.android.movingServer;
 
+import org.apache.http.util.ExceptionUtils;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,15 +11,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class MovingDbAdapter {
-	
-	
+		
 	private static final String TAG = "MovingDbAdapter";
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDb;
 	
-    /**
-     * Database creation sql statement
-     */
+	private static final String DATABASE_NAME = "data";
 	
 	/**
 	 * LOCATION TABLE AND KEYS
@@ -78,12 +77,10 @@ public class MovingDbAdapter {
 		"Updated INTEGER NOT NULL DEFAULT 0, " +
 		"Deleted INTEGER NOT NULL DEFAULT 0" +
 		");";
-		
-		//+ "itemName text not null, itemDescription text not null, boxID integer);";
-	
+			
 	private static final String DATABASE_ITEM_TABLE = "Items";
 	public static final String KEY_ITEM_ID = "_id";
-	public static final String REMOTE_ITEM_ID = "IID";
+	public static final String KEY_ITEM_REMOTE_ID = "IID";
 	public static final String KEY_ITEM_NAME = "itemName";
 	public static final String KEY_ITEM_DESC = "itemDescription";
 	public static final String KEY_ITEM_BOX_ID = "localBID";
@@ -96,7 +93,7 @@ public class MovingDbAdapter {
 	public static final String KEY_UPDATED = "Updated";
 	public static final String KEY_DELETED = "Deleted";
 	
-	private static final String DATABASE_NAME = "data";
+	
 		
 	private static final int DATABASE_VERSION = 2;
 	
@@ -273,5 +270,102 @@ public class MovingDbAdapter {
 
         return mDb.update(DATABASE_ITEM_TABLE, args, KEY_ITEM_ID + "=" + itemID, null) > 0;
 		
+	}
+	
+	/**
+	 * UPDATE HANDLERS
+	 */
+	private long getLocalLIDfromLID(long LID){
+		Cursor tmpCursor = mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID}, KEY_LOCATION_REMOTE_LID + "=" + LID, null, null, null, null);
+		
+		try{
+			tmpCursor.moveToFirst();
+			return tmpCursor.getLong(0);
+		} catch (Exception e){
+			return 0;
+		}
+
+	}
+	
+	private long getLocalBIDfromBID(long BID){
+		Cursor tmpCursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID}, KEY_BOX_REMOTE_BID + "=" + BID, null, null, null, null);
+		try{
+			tmpCursor.moveToFirst();
+			return tmpCursor.getLong(0);
+		} catch (Exception e){
+			return 0;
+		}
+	}
+	
+	private long getLocalIIDfromIID(long IID){
+		Cursor tmpCursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_ID}, KEY_ITEM_REMOTE_ID + "=" + IID, null, null, null, null);
+		try{
+			tmpCursor.moveToFirst();
+			return tmpCursor.getLong(0);
+		} catch (Exception e){
+			return 0;
+		}
+	}
+	
+	/**
+	 * Creates a location entry if not already exists a location with this LID
+	 * @param LID
+	 * @param locationName
+	 * @param locationDescription
+	 * @return Location row ID
+	 */
+	public long createLocationFromUpdate(long LID, String locationName, String locationDescription){
+		long exist = getLocalLIDfromLID(LID);
+		if (exist == 0){
+			ContentValues initialValues = new ContentValues();
+			initialValues.put(KEY_LOCATION_REMOTE_LID, LID);
+			initialValues.put(KEY_LOCATION_NAME, locationName);
+			initialValues.put(KEY_LOCATION_DESC, locationDescription);
+			return mDb.insert(DATABASE_LOCATIONS_TABLE, null, initialValues);
+		}
+		return exist;
+	}
+	 /**
+	  * Creates a Box entry if not already exists a box with this BID
+	  * @param BID
+	  * @param boxName
+	  * @param boxDescription
+	  * @param LID
+	  * @return Box row ID
+	  */
+	public long createBoxFromUpdate(long BID, String boxName, String boxDescription, long LID){
+		long exist = getLocalBIDfromBID(BID);
+		if (exist == 0){
+			ContentValues initialValues = new ContentValues();
+			initialValues.put(KEY_BOX_REMOTE_BID, BID);
+			initialValues.put(KEY_BOX_NAME, boxName);
+			initialValues.put(KEY_BOX_DESC, boxDescription);
+			initialValues.put(KEY_BOX_REMOTE_LOCATION_ID, LID);
+			initialValues.put(KEY_BOX_LOCATION_ID, getLocalLIDfromLID(LID));
+		
+			return mDb.insert(DATABASE_BOX_TABLE, null, initialValues);
+		}
+		return exist;
+	}
+	/**
+	 * Creates a item entry if not already exists a item with this IID
+	 * @param IID
+	 * @param itemName
+	 * @param itemDescription
+	 * @param BID
+	 * @return item Row ID
+	 */
+	public long createItemFromUpdate(long IID, String itemName, String itemDescription, long BID){
+		long exist = getLocalIIDfromIID(IID);
+		if (exist == 0){
+			ContentValues initialValues = new ContentValues();
+			initialValues.put(KEY_ITEM_REMOTE_BOX_ID, IID);
+			initialValues.put(KEY_ITEM_NAME, itemName);
+			initialValues.put(KEY_ITEM_DESC, itemDescription);
+			initialValues.put(KEY_ITEM_REMOTE_BOX_ID, BID);
+			initialValues.put(KEY_ITEM_BOX_ID, getLocalBIDfromBID(BID));
+			return mDb.insert(DATABASE_ITEM_TABLE, null, initialValues);			
+		}
+		return exist;
 	}
 }

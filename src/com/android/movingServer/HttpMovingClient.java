@@ -70,10 +70,8 @@ public class HttpMovingClient extends IntentService {
 			SharedPreferences.Editor editor = settings.edit();
 			
 			lastConnTime = settings.getLong("lastConnectionTimeStamp", 0);
-			
-			
-			
-			HttpGet getTest = new HttpGet(new URI("http://movingapp.no-ip.org:47301/boxes/"+lastConnTime));
+						
+			HttpGet getTest = new HttpGet(new URI("http://129.242.22.95:47301/updates/"+lastConnTime));
 
 			HttpResponse response = movingClient.execute(getTest);
 
@@ -91,7 +89,7 @@ public class HttpMovingClient extends IntentService {
 			input.close();
 			String result = sb.toString();
 			print (result);
-			updateHandler.updateFromInput(result);
+			updateHandler.updateFromSync(result);//updateFromInput(result);
 			broadcastUpdate();
 
 		} finally {
