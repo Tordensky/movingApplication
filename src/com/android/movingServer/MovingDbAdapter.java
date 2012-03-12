@@ -26,7 +26,7 @@ public class MovingDbAdapter {
 		"(_id integer primary key autoincrement, " +
 		"LID INTEGER NOT NULL DEFAULT 0, " +
 		"locationName TEXT, " +
-		"locatonDescription TEXT, " +
+		"locationDescription TEXT, " +
 		"Created INTEGER NOT NULL DEFAULT 0, " +
 		"Updated INTEGER NOT NULL DEFAULT 0, " +
 		"Deleted INTEGER NOT NULL DEFAULT 0" +
@@ -163,8 +163,13 @@ public class MovingDbAdapter {
     }
     
     public Cursor getBoxFromID(long BID){
-    	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC}, 
-    			KEY_BOX_ID + "=" + BID, null, null, null, null);
+    	String where = DATABASE_BOX_TABLE+"."+KEY_BOX_ID + "=" + BID;// + " AND " + KEY_BOX_LOCATION_ID + " LIKE " + DATABASE_LOCATIONS_TABLE+"."+KEY_LOCATION_ID;
+    	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC, KEY_BOX_LOCATION_ID}, 
+    			where, null, null, null, null);
+    }
+    
+    public Cursor getLocationFromID(long localLID){
+    	return mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_NAME, KEY_LOCATION_DESC}, KEY_LOCATION_ID+"="+localLID, null, null, null, null);
     }
     
     public Cursor fetchAllBoxes() {
@@ -276,33 +281,48 @@ public class MovingDbAdapter {
 	 * UPDATE HANDLERS
 	 */
 	private long getLocalLIDfromLID(long LID){
-		Cursor tmpCursor = mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID}, KEY_LOCATION_REMOTE_LID + "=" + LID, null, null, null, null);
+		//Cursor tmpCursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_BOX_ID}, KEY_ITEM_ID + "=" +IID,null,null,null,null);
+		
+		Cursor tmpCursor = mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID}, KEY_LOCATION_REMOTE_LID + " = " + LID, null, null, null, null);
 		
 		try{
 			tmpCursor.moveToFirst();
-			return tmpCursor.getLong(0);
+			Long id = tmpCursor.getLong(0);
+			tmpCursor.close();
+			return id;
 		} catch (Exception e){
+			Log.e("GET LOCAL LID", "RETURNS 0");
 			return 0;
 		}
 
 	}
 	
 	private long getLocalBIDfromBID(long BID){
-		Cursor tmpCursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID}, KEY_BOX_REMOTE_BID + "=" + BID, null, null, null, null);
+		Cursor tmpCursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID}, KEY_BOX_REMOTE_BID + " = " + BID, null, null, null, null);
 		try{
 			tmpCursor.moveToFirst();
-			return tmpCursor.getLong(0);
+			Long id = tmpCursor.getLong(0);
+			tmpCursor.close();
+			return id;
 		} catch (Exception e){
+			Log.e("GET LOCAL BID", "RETURNS 0");
 			return 0;
 		}
 	}
-	
+	/**
+	 * 
+	 * @param IID
+	 * @return
+	 */
 	private long getLocalIIDfromIID(long IID){
-		Cursor tmpCursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_ID}, KEY_ITEM_REMOTE_ID + "=" + IID, null, null, null, null);
+		Cursor tmpCursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_ID}, KEY_ITEM_REMOTE_ID + " = " + IID, null, null, null, null);
 		try{
 			tmpCursor.moveToFirst();
-			return tmpCursor.getLong(0);
+			Long id = tmpCursor.getLong(0);
+			tmpCursor.close();
+			return id;
 		} catch (Exception e){
+			Log.e("GET LOCAL IID", "RETURNS 0");
 			return 0;
 		}
 	}
@@ -359,7 +379,7 @@ public class MovingDbAdapter {
 		long exist = getLocalIIDfromIID(IID);
 		if (exist == 0){
 			ContentValues initialValues = new ContentValues();
-			initialValues.put(KEY_ITEM_REMOTE_BOX_ID, IID);
+			initialValues.put(KEY_ITEM_REMOTE_ID, IID);
 			initialValues.put(KEY_ITEM_NAME, itemName);
 			initialValues.put(KEY_ITEM_DESC, itemDescription);
 			initialValues.put(KEY_ITEM_REMOTE_BOX_ID, BID);
@@ -368,4 +388,80 @@ public class MovingDbAdapter {
 		}
 		return exist;
 	}
+	
+	/**
+	 * Update location info from sync to server
+	 * @param IID
+	 * @param locationName
+	 * @param locationDescription
+	 * @return Success
+	 */
+	public boolean updateLocationFromUpdate(long LID, String locationName, String locationDescription){
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(KEY_LOCATION_NAME, locationName);
+		updatedValues.put(KEY_LOCATION_DESC, locationDescription);
+		return mDb.update(DATABASE_LOCATIONS_TABLE, updatedValues, KEY_LOCATION_REMOTE_LID + "=" + LID, null) > 0;
+	}
+	
+	/**
+	 * Update box info from sync to server
+	 * @param BID
+	 * @param boxName
+	 * @param boxDescription
+	 * @param LID
+	 * @return success
+	 */
+	public boolean updateBoxFromUpdate(long BID, String boxName, String boxDescription, long LID){
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(KEY_BOX_NAME, boxName);
+		updatedValues.put(KEY_BOX_DESC, boxDescription);
+		updatedValues.put(KEY_BOX_REMOTE_LOCATION_ID, LID);
+		updatedValues.put(KEY_BOX_LOCATION_ID, getLocalLIDfromLID(LID));
+		return mDb.update(DATABASE_BOX_TABLE, updatedValues, KEY_BOX_REMOTE_BID + "=" + BID, null) > 0;
+	}
+	
+	/**
+	 * Update item info from sync to server
+	 * @param IID
+	 * @param itemName
+	 * @param itemDescription
+	 * @return success
+	 */
+	public boolean updateItemFromUpdate(long IID, String itemName, String itemDescription){
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(KEY_ITEM_NAME, itemName);
+		updatedValues.put(KEY_ITEM_DESC, itemDescription);
+		return mDb.update(DATABASE_ITEM_TABLE, updatedValues, KEY_ITEM_REMOTE_ID + "=" + IID, null) > 0;
+	}
+	
+	/**
+	 * HARD delete location from sync to server
+	 * @param LID
+	 * @return success
+	 */
+	public boolean deleteLocationFromUpdate(long LID){
+		return mDb.delete(DATABASE_LOCATIONS_TABLE, KEY_LOCATION_REMOTE_LID + "=" + LID, null) > 0;
+	}
+	
+	/**
+	 * HARD delete box from sync to server
+	 * @param BID
+	 * @return success
+	 */
+	public boolean deleteBoxFromUpdate(long BID){
+		return mDb.delete(DATABASE_BOX_TABLE, KEY_BOX_REMOTE_BID + "=" + BID, null) > 0;
+	}
+	
+	/**
+	 * HARD delete item from sync to server
+	 * @param IID
+	 * @return success
+	 */
+	public boolean deleteItemFromUpdate(long IID){
+		return mDb.delete(DATABASE_ITEM_TABLE, KEY_ITEM_REMOTE_ID + "=" + IID, null) > 0;
+	}
+	
 }
+
+
+

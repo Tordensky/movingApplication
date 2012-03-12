@@ -28,6 +28,7 @@ public class itemList extends ListActivity{
 	
 	TextView boxName;
 	TextView boxDescription;
+	TextView boxLocation;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class itemList extends ListActivity{
         
         boxName = (TextView)findViewById(R.id.boxName); 
         boxDescription = (TextView)findViewById(R.id.boxDescription);
+        boxLocation = (TextView)findViewById(R.id.boxLocation);
         
 		fillData();
 		
@@ -59,6 +61,14 @@ public class itemList extends ListActivity{
 		
 		boxName.setText(mMovingCursor.getString(1));
 		boxDescription.setText(mMovingCursor.getString(2));
+		
+		try {
+			mMovingCursor = mDbHelper.getLocationFromID(mMovingCursor.getLong(3));
+			mMovingCursor.moveToFirst();
+			boxLocation.setText(mMovingCursor.getString(0));
+		} catch (Exception e) {
+			boxLocation.setText("No Location");
+		}
 		
     	mMovingCursor = mDbHelper.fetchAllItemsFromBox(CurrentBoxID);
     	

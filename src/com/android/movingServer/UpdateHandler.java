@@ -33,6 +33,14 @@ public class UpdateHandler{
 			createBoxesFromInput(new JSONArray(json_message_body.getString("NewBoxes")));
 			createItemsFromInput(new JSONArray(json_message_body.getString("NewItems")));
 			
+			updateLocationsFromInput(new JSONArray(json_message_body.getString("UpdatedLocations")));
+			updateBoxesFromInput(new JSONArray(json_message_body.getString("UpdatedBoxes")));
+			updateItemsFromInput(new JSONArray(json_message_body.getString("UpdatedItems")));
+			
+			deleteLocationsFromInput(new JSONArray(json_message_body.getString("DeletedLocations")));
+			deleteBoxesFromInput(new JSONArray(json_message_body.getString("DeletedBoxes")));
+			deleteItemsFromInput(new JSONArray(json_message_body.getString("DeletedItems")));
+			
 			setConnectionTimeStamp(json_message_body.getLong("TimeStamp"));
 			
 		} catch  (Exception e) {
@@ -47,8 +55,7 @@ public class UpdateHandler{
 		for (int i = 0; i < locations.length(); i++){
 			JSONObject location = locations.getJSONObject(i);
 			Log.i("LOCATION", location.toString());
-			mDbHelper.createLocationFromUpdate(location.getLong("LID"), location.getString("locationName"), location.getString("locationDescription"));
-			
+			mDbHelper.createLocationFromUpdate(location.getLong("LID"), location.getString("locationName"), location.getString("locationDescription"));			
 		}
 	}
 	
@@ -67,6 +74,50 @@ public class UpdateHandler{
 			mDbHelper.createItemFromUpdate(item.getLong("IID"), item.getString("itemName"), item.getString("itemDescription"), item.getLong("BID"));
 		}
 	}
+	
+	private void updateLocationsFromInput(JSONArray locations) throws JSONException {
+		for (int i = 0; i < locations.length(); i++){
+			JSONObject location = locations.getJSONObject(i);
+			mDbHelper.updateLocationFromUpdate(location.getLong("LID"), location.getString("locationName"), location.getString("locationDescription"));
+		}
+	}
+	
+	private void updateBoxesFromInput(JSONArray boxes) throws JSONException {
+		for (int i = 0; i < boxes.length(); i++){
+			JSONObject box = boxes.getJSONObject(i);
+			mDbHelper.updateBoxFromUpdate(box.getLong("BID"), box.getString("boxName"), box.getString("boxDescription"), box.getLong("boxLocation"));
+		}
+	}
+	
+	private void updateItemsFromInput(JSONArray items) throws JSONException {
+		for (int i = 0; i < items.length(); i++){
+			JSONObject item = items.getJSONObject(i);
+			mDbHelper.updateItemFromUpdate(item.getLong("IID"), item.getString("itemName"), item.getString("itemDescription"));
+		}
+	}
+	
+	private void deleteLocationsFromInput(JSONArray locations) throws JSONException{
+		for (int i = 0; i < locations.length(); i++){
+			JSONObject location = locations.getJSONObject(i);
+			mDbHelper.deleteLocationFromUpdate(location.getLong("LID"));
+		}
+	}
+	
+	private void deleteBoxesFromInput(JSONArray boxes) throws JSONException{
+		for (int i = 0; i < boxes.length(); i++){
+			JSONObject box = boxes.getJSONObject(i);
+			mDbHelper.deleteBoxFromUpdate(box.getLong("BID"));
+		}
+	}
+	
+	private void deleteItemsFromInput(JSONArray items) throws JSONException{
+		for (int i = 0; i < items.length(); i++){
+			JSONObject item = items.getJSONObject(i);
+			mDbHelper.deleteItemFromUpdate(item.getLong("IID"));
+		}
+	}
+	
+	
 		
 	public void updateFromInput(String result){
 		mDbHelper.open();

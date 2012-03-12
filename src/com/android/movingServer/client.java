@@ -89,9 +89,15 @@ public class Client extends Activity {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		
-		stopService(new Intent(this, HttpMovingClient.class));
+		//stopService(new Intent(this, HttpMovingClient.class));
 		super.onDestroy();
 	}
+	
+	protected void onDestroy(){
+		super.onDestroy();
+		stopService(new Intent(this, HttpMovingClient.class));
+	}
+	
 	
 	private void startHttpService() {
 		Intent i = new Intent(this, HttpMovingClient.class);
