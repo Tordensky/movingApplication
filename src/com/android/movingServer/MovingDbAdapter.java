@@ -18,29 +18,86 @@ public class MovingDbAdapter {
     /**
      * Database creation sql statement
      */
+	
+	/**
+	 * LOCATION TABLE AND KEYS
+	 */
+	private static final String DATABASE_CREATE_LOCATIONS_TABLE =
+		"CREATE TABLE Locations "+
+		"(_id integer primary key autoincrement, " +
+		"LID INTEGER NOT NULL DEFAULT 0, " +
+		"locationName TEXT, " +
+		"locatonDescription TEXT, " +
+		"Created INTEGER NOT NULL DEFAULT 0, " +
+		"Updated INTEGER NOT NULL DEFAULT 0, " +
+		"Deleted INTEGER NOT NULL DEFAULT 0" +
+		");";
+	
+	private static final String DATABASE_LOCATIONS_TABLE = "Locations";
+	public static final String KEY_LOCATION_ID = "_id";
+	public static final String KEY_LOCATION_REMOTE_LID = "LID";
+	public static final String KEY_LOCATION_NAME = "locationName";
+	public static final String KEY_LOCATION_DESC = "locationDescription";
+	
+	/**
+	 * BOXES TABLE AND KEYS
+	 */
 	private static final String DATABASE_CREATE_BOXES_TABLE = 
-		"CREATE TABLE Boxes (_id integer primary key autoincrement, "
-		+ "boxName text not null, boxDescription text not null);";
-	private static final String DATABASE_CREATE_ITEMS_TABLE =	
-		"CREATE TABLE Items (_id integer primary key autoincrement, "
-		+ "itemName text not null, itemDescription text not null, boxID integer);";
+		"CREATE TABLE Boxes " +
+		"(_id integer primary key autoincrement, " +
+		"BID INTEGER NOT NULL DEFAULT 0," +
+		"boxName text not null," +
+		"boxDescription text not null, " + 
+		"localLID INTEGER NOT NULL DEFAULT 0, " +
+		"LID INTEGER NOT NULL DEFAULT 0, " +
+		"Created INTEGER NOT NULL DEFAULT 0, " +
+		"Updated INTEGER NOT NULL DEFAULT 0, " +
+		"Deleted INTEGER NOT NULL DEFAULT 0" +
+		");";
 	
 	private static final String DATABASE_BOX_TABLE = "Boxes";
 	public static final String KEY_BOX_ID = "_id";
+	public static final String KEY_BOX_REMOTE_BID = "BID";
 	public static final String KEY_BOX_NAME = "boxName";
 	public static final String KEY_BOX_DESC = "boxDescription";
+	public static final String KEY_BOX_LOCATION_ID = "localLID";
+	public static final String KEY_BOX_REMOTE_LOCATION_ID = "LID";
+	
+	/**
+	 * ITEMS TABLE AND KEYS	
+	 */
+	private static final String DATABASE_CREATE_ITEMS_TABLE =	
+		"CREATE TABLE Items "+
+		"(_id integer primary key autoincrement, " +
+		"IID INTEGER NOT NULL DEFAULT 0, " +
+		"itemName TEXT NOT NULL, " +
+		"itemDescription TEXT NOT NULL, " +
+		"localBID INTEGER NOT NULL, " +
+		"BID INTEGER NOT NULL DEFAULT 0, " +
+		"Created INTEGER NOT NULL DEFAULT 0, " +
+		"Updated INTEGER NOT NULL DEFAULT 0, " +
+		"Deleted INTEGER NOT NULL DEFAULT 0" +
+		");";
+		
+		//+ "itemName text not null, itemDescription text not null, boxID integer);";
 	
 	private static final String DATABASE_ITEM_TABLE = "Items";
 	public static final String KEY_ITEM_ID = "_id";
+	public static final String REMOTE_ITEM_ID = "IID";
 	public static final String KEY_ITEM_NAME = "itemName";
 	public static final String KEY_ITEM_DESC = "itemDescription";
-	public static final String KEY_ITEM_BOX_ID = "boxID";
+	public static final String KEY_ITEM_BOX_ID = "localBID";
+	public static final String KEY_ITEM_REMOTE_BOX_ID = "BID";
 	
+	/**
+	 * SHARED KEYS
+	 */
+	public static final String KEY_CREATED = "Created";
+	public static final String KEY_UPDATED = "Updated";
+	public static final String KEY_DELETED = "Deleted";
 	
 	private static final String DATABASE_NAME = "data";
-	
-	
-	
+		
 	private static final int DATABASE_VERSION = 2;
 	
 	private final Context mCtx;
@@ -53,6 +110,7 @@ public class MovingDbAdapter {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
+			db.execSQL(DATABASE_CREATE_LOCATIONS_TABLE);
 			db.execSQL(DATABASE_CREATE_BOXES_TABLE);
 			db.execSQL(DATABASE_CREATE_ITEMS_TABLE);
 		}

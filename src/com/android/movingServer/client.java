@@ -38,7 +38,7 @@ public class Client extends Activity {
 		
         setupSharedPreferences();
         
-		startHttpService();
+		//startHttpService();
 		
 		//doBindService();
 	}
