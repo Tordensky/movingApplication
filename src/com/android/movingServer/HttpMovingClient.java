@@ -73,7 +73,7 @@ public class HttpMovingClient extends IntentService {
 			
 			
 			
-			HttpGet getTest = new HttpGet(new URI("http://129.242.115.12:4500/boxes/"+lastConnTime));
+			HttpGet getTest = new HttpGet(new URI("http://movingapp.no-ip.org:47301/boxes/"+lastConnTime));
 
 			HttpResponse response = movingClient.execute(getTest);
 
@@ -133,6 +133,7 @@ public class HttpMovingClient extends IntentService {
     @Override
     public void onDestroy() {
     	super.onDestroy();
+    	timer.cancel();
         // Tell the user we stopped.
         Toast.makeText(this, "SERVICE DESTROYED", Toast.LENGTH_SHORT).show();
     }
