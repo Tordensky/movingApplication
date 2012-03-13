@@ -1,6 +1,9 @@
 package com.android.movingServer;
 
 import org.apache.http.util.ExceptionUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -269,6 +272,7 @@ public class MovingDbAdapter {
     	initialValues.put(KEY_ITEM_NAME, itemName);
     	initialValues.put(KEY_ITEM_DESC, itemDescription);
     	initialValues.put(KEY_ITEM_BOX_ID, boxID);
+    	initialValues.put(KEY_ITEM_REMOTE_BOX_ID, getRemoteBIDforRowID(boxID));
     	initialValues.put(KEY_CREATED, 1);
     	
     	return mDb.insert(DATABASE_ITEM_TABLE, null, initialValues);
@@ -333,8 +337,7 @@ public class MovingDbAdapter {
 	 * UPDATE HANDLERS
 	 */
 	private long getLocalLIDfromLID(long LID){
-		//Cursor tmpCursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_BOX_ID}, KEY_ITEM_ID + "=" +IID,null,null,null,null);
-		
+		//Cursor tmpCursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_BOX_ID}, KEY_ITEM_ID + "=" +IID,null,null,null,null);		
 		Cursor tmpCursor = mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID}, KEY_LOCATION_REMOTE_LID + " = " + LID, null, null, null, null);
 		
 		try{
@@ -346,7 +349,20 @@ public class MovingDbAdapter {
 			Log.e("GET LOCAL LID", "RETURNS 0");
 			return 0;
 		}
-
+	}
+	
+	private long getRemoteBIDforRowID(long rowID){
+		Cursor tmpCursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_REMOTE_BID}, KEY_BOX_ID + " = " + rowID, null, null, null, null);
+		
+		try{
+			tmpCursor.moveToFirst();
+			Long id = tmpCursor.getLong(0);
+			tmpCursor.close();
+			return id;
+		} catch (Exception e){
+			Log.e("GET LOCAL LID", "RETURNS 0");
+			return 0;
+		}
 	}
 	
 	private long getLocalBIDfromBID(long BID){
@@ -513,6 +529,108 @@ public class MovingDbAdapter {
 		return mDb.delete(DATABASE_ITEM_TABLE, KEY_ITEM_REMOTE_ID + "=" + IID, null) > 0;
 	}
 	
+	public JSONArray getLocationsCreatedAfterLastSync(){
+		String where = "("+KEY_CREATED + "= 1 OR (" + KEY_CREATED + "= 1 AND " + KEY_UPDATED + "= 1)) AND " + KEY_DELETED + "= 0";
+		Cursor cursor = mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID, KEY_LOCATION_NAME, KEY_LOCATION_DESC}, where, null, null, null, null);
+		return cursorToJSON(cursor);
+	}
+	
+	public JSONArray getBoxesCreatedAfterLastSync(){
+		String where = "("+KEY_CREATED + "= 1 OR (" + KEY_CREATED + "= 1 AND " + KEY_UPDATED + "= 1)) AND " + KEY_DELETED + "= 0";
+		Cursor cursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC, KEY_BOX_LOCATION_ID, KEY_BOX_REMOTE_LOCATION_ID}, where, null, null, null, null);
+		return cursorToJSON(cursor);
+	}
+	
+	public JSONArray getItemsCreatedAfterLastSync(){
+		String where = "("+KEY_CREATED + "= 1 OR (" + KEY_CREATED + "= 1 AND " + KEY_UPDATED + "= 1)) AND " + KEY_DELETED + "= 0";
+		Cursor cursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_ID, KEY_ITEM_NAME, KEY_ITEM_DESC, KEY_ITEM_BOX_ID, KEY_ITEM_REMOTE_BOX_ID}, where, null, null, null, null);
+		return cursorToJSON(cursor);
+	}
+	
+	public JSONArray getLocationsUpdatedAfter(){
+		String where = KEY_CREATED + "= 0 AND " + KEY_UPDATED + "= 1 AND " + KEY_DELETED + "= 0";
+		Cursor cursor = mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_REMOTE_LID, KEY_LOCATION_NAME, KEY_LOCATION_DESC}, where, null, null, null, null);
+		return cursorToJSON(cursor);
+	}
+	
+	public JSONArray getBoxesUpdatedAfter(){
+		String where = KEY_CREATED + "= 0 AND " + KEY_UPDATED + "= 1 AND " + KEY_DELETED + "= 0";
+		Cursor cursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_REMOTE_BID, KEY_BOX_NAME, KEY_BOX_DESC, KEY_BOX_LOCATION_ID, KEY_BOX_REMOTE_LOCATION_ID}, where, null, null, null, null);
+		return cursorToJSON(cursor);
+	}
+	
+	public JSONArray getItemsUpdatedAfter(){
+		String where = KEY_CREATED + "= 0 AND " + KEY_UPDATED + "= 1 AND " + KEY_DELETED + "= 0";
+		Cursor cursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_REMOTE_ID, KEY_ITEM_NAME, KEY_ITEM_DESC, KEY_ITEM_BOX_ID, KEY_ITEM_REMOTE_BOX_ID}, where, null, null, null, null);
+		return cursorToJSON(cursor);
+	}
+	
+	private JSONArray cursorToJSON(Cursor cursor){
+		JSONArray result = new JSONArray();
+		cursor.moveToFirst();
+		for (int i = 0; i < cursor.getCount(); i++){
+			JSONObject row = new JSONObject();
+			for (int j = 0; j < cursor.getColumnCount(); j++){
+				try {
+					//
+					Log.i("J =", Integer.toString(j));
+					row.putOpt(cursor.getColumnName(j), cursor.getString(j));
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
+					Log.e("REULT TO JASON FUNKER IKKE!", "DRITT");
+				}
+				
+			}
+			cursor.moveToNext();
+			result.put(row);
+		}				
+		return result;
+	}
+	
+	public void setRemoteIdLocations(long rowID, long LID){
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(KEY_LOCATION_REMOTE_LID, LID);
+		updatedValues.put(KEY_CREATED, 0);
+		mDb.update(DATABASE_LOCATIONS_TABLE, updatedValues, KEY_LOCATION_ID + "=" + rowID, null);
+		updateBoxLocationLID(rowID, LID);
+	}
+	
+	private void updateBoxLocationLID(long localLID, long remoteLID){
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(KEY_BOX_REMOTE_LOCATION_ID, remoteLID);
+		mDb.update(DATABASE_BOX_TABLE, updatedValues, KEY_BOX_LOCATION_ID +"="+ localLID, null);
+	}
+	
+	public void setRemoteIdBoxes(long rowID, long BID){
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(KEY_BOX_REMOTE_BID, BID);
+		updatedValues.put(KEY_CREATED, 0);
+		mDb.update(DATABASE_BOX_TABLE, updatedValues, KEY_BOX_ID + "=" +rowID, null);
+		updateItemBoxBID(rowID, BID);
+	}
+	
+	private void updateItemBoxBID(long localBID, long remoteBID){
+		Log.e("UPDATE ITEM BOX ID", Long.toString(localBID) +" : "+ Long.toString(remoteBID));
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(KEY_ITEM_REMOTE_BOX_ID, remoteBID);
+		mDb.update(DATABASE_ITEM_TABLE, updatedValues, KEY_ITEM_BOX_ID +"="+ localBID, null);
+	}
+	
+	public void setRemoteIdItems(long rowId, long IID){
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(KEY_ITEM_REMOTE_ID, IID);
+		updatedValues.put(KEY_CREATED, 0);
+		mDb.update(DATABASE_ITEM_TABLE, updatedValues, KEY_ITEM_ID + "=" + rowId, null);
+	}
+	
+	public void resetUpdateFlags(){
+		ContentValues updatedValues = new ContentValues();
+		updatedValues.put(KEY_UPDATED, 0);
+		mDb.update(DATABASE_LOCATIONS_TABLE, updatedValues, null, null);
+		mDb.update(DATABASE_BOX_TABLE, updatedValues, null, null);
+		mDb.update(DATABASE_ITEM_TABLE, updatedValues, null, null);
+	}
 }
 
 

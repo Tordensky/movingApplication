@@ -1,5 +1,7 @@
 package com.android.movingServer;
 
+import java.util.Iterator;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,13 +26,72 @@ public class UpdateHandler{
 	
 	// TODO CREATE METHOD
 	public String createUpdateMessage(){
-		
-		return "UPDATE MESSAGE";
+		try {
+			mDbHelper.open();
+			JSONObject updateMessage = new JSONObject();
+			updateMessage.put("NewLocations", mDbHelper.getLocationsCreatedAfterLastSync());
+			updateMessage.put("NewBoxes", mDbHelper.getBoxesCreatedAfterLastSync());
+			updateMessage.put("NewItems", mDbHelper.getItemsCreatedAfterLastSync());
+			
+			updateMessage.put("UpdatedLocations", mDbHelper.getLocationsUpdatedAfter());
+			updateMessage.put("UpdatedBoxes", mDbHelper.getBoxesUpdatedAfter());
+			updateMessage.put("UpdatedItems", mDbHelper.getItemsUpdatedAfter());
+			
+			mDbHelper.resetUpdateFlags();
+			mDbHelper.close();
+			return updateMessage.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "FUNKER IKKE";
+		} finally {
+			mDbHelper.close();
+		}
 	}
 	
 	// TODO IMPLEMENT
-	public void updateIDSafterPOST(){
-		
+	public void updateIDSafterPOST(String body){
+		mDbHelper.open();
+		try {
+			Log.e("UPDATE BODY",body);
+			JSONObject newIDs = new JSONObject(body);			
+			
+			// BOXES
+			JSONObject locationIDs = newIDs.getJSONObject("LocationIdMap");
+			Iterator<String> locationIter = locationIDs.keys();
+			while(locationIter.hasNext()){
+				String keyName = locationIter.next();
+				Long newID = locationIDs.getLong(keyName);
+				Log.i("NEW IDS", keyName+" : "+newID.toString());
+				mDbHelper.setRemoteIdLocations(Long.parseLong(keyName), newID);
+			}
+			
+			// Boxes
+			JSONObject boxIDs = newIDs.getJSONObject("BoxIdMap");
+			Iterator<String> boxIter = boxIDs.keys();
+			while(boxIter.hasNext()){
+				String keyName = boxIter.next();
+				Long newID = boxIDs.getLong(keyName);
+				Log.i("NEW IDS", keyName+" : "+newID.toString());
+				mDbHelper.setRemoteIdBoxes(Long.parseLong(keyName), newID);
+			}
+			
+			// Items
+			JSONObject itemIDs = newIDs.getJSONObject("ItemIdMap");
+			Iterator<String> itemIter = itemIDs.keys();
+			while(itemIter.hasNext()){
+				String keyName = itemIter.next();
+				Long newID = itemIDs.getLong(keyName);
+				Log.i("NEW IDS", keyName+" : "+newID.toString());
+				mDbHelper.setRemoteIdItems(Long.parseLong(keyName), newID);
+			}
+			
+			
+			mDbHelper.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mDbHelper.close();
+		}
 	}
 	
 	

@@ -71,7 +71,7 @@ public class HttpMovingClient extends IntentService {
 	public void executeHttpPost() {
 		try {
 			HttpClient movingClient = new DefaultHttpClient();
-			HttpPost postUpdates = new HttpPost(new URI(serverURI));
+			HttpPost postUpdates = new HttpPost(new URI(serverURI+"/updates/0"));
 			
 			// TODO CREATE UPDATE MESSAGE
 			
@@ -82,7 +82,7 @@ public class HttpMovingClient extends IntentService {
 			HttpResponse response = movingClient.execute(postUpdates);
 			
 			String message = responseToString(response);
-			// TODO UPDATE REMOTE ID's
+			updateHandler.updateIDSafterPOST(message);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
