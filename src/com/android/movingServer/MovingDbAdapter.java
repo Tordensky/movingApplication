@@ -144,6 +144,42 @@ public class MovingDbAdapter {
         mDbHelper.close();
     }
     
+    public long createLocation(String Name, String Description) {
+    	ContentValues initialValues = new ContentValues();
+    	
+    	if (Description.length() > 1){
+    		Description = Description.substring(0,1).toUpperCase()+Description.substring(1).toLowerCase();	
+    	}
+    	
+    	initialValues.put(KEY_LOCATION_NAME, Name.toUpperCase());
+    	initialValues.put(KEY_LOCATION_DESC, Description);
+    	initialValues.put(KEY_CREATED, 1);
+    	
+    	return mDb.insert(DATABASE_LOCATIONS_TABLE, null, initialValues);
+    }
+    
+	public boolean editLocation(Long locationID, String name, String description) {
+        ContentValues args = new ContentValues();
+        
+        if (description.length() > 1){
+    		description = description.substring(0,1).toUpperCase()+description.substring(1).toLowerCase();	
+    	}
+        
+        args.put(KEY_LOCATION_NAME, name.toUpperCase());
+        args.put(KEY_LOCATION_DESC, description);
+        args.put(KEY_UPDATED, 1);
+
+        return mDb.update(DATABASE_LOCATIONS_TABLE, args, KEY_BOX_ID + "=" + locationID, null) > 0;		
+	}
+	
+	public boolean deleteLocation(Long locationID){
+		ContentValues args = new ContentValues();
+		args.put(KEY_DELETED, 1);
+		return mDb.update(DATABASE_LOCATIONS_TABLE, args, KEY_LOCATION_ID + "=" + locationID, null) > 0;
+	}
+    
+    
+    
     /**
      * Create a new box
      * @param Name
@@ -158,6 +194,7 @@ public class MovingDbAdapter {
     	
     	initialValues.put(KEY_BOX_NAME, Name.toUpperCase());
     	initialValues.put(KEY_BOX_DESC, Description);
+    	initialValues.put(KEY_CREATED, 1);
     	
     	return mDb.insert(DATABASE_BOX_TABLE, null, initialValues);
     }
@@ -174,7 +211,7 @@ public class MovingDbAdapter {
     
     public Cursor fetchAllBoxes() {
     	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC}, 
-    			null, null, null, null, KEY_BOX_NAME + " ASC");
+    			KEY_DELETED +" = 0", null, null, null, KEY_BOX_NAME + " ASC");
     }
     
     public Cursor fetchAllBoxesSearch(String search) {
@@ -182,8 +219,9 @@ public class MovingDbAdapter {
     		search = "";
     	}
     	search = search.toLowerCase();
-    	String where = 	KEY_BOX_NAME.toLowerCase() + " LIKE '%" + search + "%' or " + 
-    					KEY_BOX_DESC.toLowerCase() + " LIKE '%" + search + "%' ";
+    	String where = 	"("+KEY_BOX_NAME.toLowerCase() + " LIKE '%" + search + "%' OR " + 
+    					KEY_BOX_DESC.toLowerCase() + " LIKE '%" + search + "%' ) AND " +
+    					KEY_DELETED + "= 0";
     	
     	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC}, 
     			where, null, null, null, KEY_BOX_NAME + " ASC");
@@ -191,7 +229,10 @@ public class MovingDbAdapter {
 
 	public boolean deleteBox(long rowId) {
 		deleteAllItemsInBox(rowId);
-		return mDb.delete(DATABASE_BOX_TABLE, KEY_BOX_ID + "=" + rowId, null) > 0;
+		ContentValues args = new ContentValues();
+		args.put(KEY_DELETED, 1);
+		return mDb.update(DATABASE_BOX_TABLE, args, KEY_BOX_ID + "=" + rowId, null) > 0;
+		//return mDb.delete(DATABASE_BOX_TABLE, KEY_BOX_ID + "=" + rowId, null) > 0;
 	}
 
 	public boolean editBox(Long boxID, String newBoxName, String newBoxDescription) {
@@ -203,13 +244,13 @@ public class MovingDbAdapter {
         
         args.put(KEY_BOX_NAME, newBoxName.toUpperCase());
         args.put(KEY_BOX_DESC, newBoxDescription);
+        args.put(KEY_UPDATED, 1);
 
-        return mDb.update(DATABASE_BOX_TABLE, args, KEY_BOX_ID + "=" + boxID, null) > 0;
-		
+        return mDb.update(DATABASE_BOX_TABLE, args, KEY_BOX_ID + "=" + boxID, null) > 0;		
 	}
 	
     /**
-     * Create a new box
+     * Create a new Item
      * @param Name
      * @return rowId or -1 if failed
      */
@@ -228,13 +269,14 @@ public class MovingDbAdapter {
     	initialValues.put(KEY_ITEM_NAME, itemName);
     	initialValues.put(KEY_ITEM_DESC, itemDescription);
     	initialValues.put(KEY_ITEM_BOX_ID, boxID);
+    	initialValues.put(KEY_CREATED, 1);
     	
     	return mDb.insert(DATABASE_ITEM_TABLE, null, initialValues);
     }
     
     public Cursor fetchAllItemsFromBox(long boxID) {
     	return mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_ID, KEY_ITEM_NAME, KEY_ITEM_DESC}, 
-    			KEY_ITEM_BOX_ID + "=" + boxID, null, null, null, KEY_ITEM_NAME + " ASC");
+    			KEY_ITEM_BOX_ID + "=" + boxID + " AND " + KEY_DELETED +" = 0", null, null, null, KEY_ITEM_NAME + " ASC");
     }
     
     public Cursor fetchAllITemsFromBoxesWhere(String search){
@@ -243,10 +285,11 @@ public class MovingDbAdapter {
     	}
     	search = search.toLowerCase();
     	
-    	String where = 	DATABASE_BOX_TABLE+"."+KEY_BOX_ID + " = " + KEY_ITEM_BOX_ID + " AND (" +
+    	String where = 	DATABASE_BOX_TABLE+"."+KEY_BOX_ID + " = " + KEY_ITEM_BOX_ID + " AND ((" +
     					KEY_ITEM_NAME.toLowerCase() + " LIKE '%" + search + "%' or " +
     					KEY_ITEM_DESC.toLowerCase() + " LIKE '%" + search + "%' or " +
-						KEY_BOX_NAME.toLowerCase() + " LIKE '%" + search + "%') ";
+						KEY_BOX_NAME.toLowerCase() + " LIKE '%" + search + "%')) AND "+
+						DATABASE_ITEM_TABLE+"."+KEY_DELETED + "= 0";
     	
     	
     	return mDb.query(DATABASE_ITEM_TABLE + ", " + DATABASE_BOX_TABLE, new String[] {DATABASE_ITEM_TABLE+"."+KEY_ITEM_ID, KEY_ITEM_NAME, KEY_ITEM_DESC, KEY_BOX_NAME}, 
@@ -261,17 +304,26 @@ public class MovingDbAdapter {
     }
 
 	public boolean deleteItem(long rowId) {
-		return mDb.delete(DATABASE_ITEM_TABLE, KEY_ITEM_ID + "=" + rowId, null) > 0;
+		ContentValues args = new ContentValues();
+		args.put(KEY_DELETED, 1);
+		return mDb.update(DATABASE_ITEM_TABLE, args, KEY_ITEM_ID + "=" + rowId, null) > 0;
+		//return mDb.delete(DATABASE_ITEM_TABLE, KEY_ITEM_ID + "=" + rowId, null) > 0;
 	}
 	
 	public boolean deleteAllItemsInBox(long BID){
-		return mDb.delete(DATABASE_ITEM_TABLE, KEY_ITEM_BOX_ID + "=" + BID, null) > 0;
+		ContentValues args = new ContentValues();
+		args.put(KEY_DELETED, 1);
+		return mDb.update(DATABASE_ITEM_TABLE, args, KEY_ITEM_BOX_ID + "=" + BID, null) > 0;
+		
+		
+		//return mDb.delete(DATABASE_ITEM_TABLE, KEY_ITEM_BOX_ID + "=" + BID, null) > 0;
 	}
 
 	public boolean editItem(Long itemID, String newItemName, String newItemDescription) {
         ContentValues args = new ContentValues();
         args.put(KEY_BOX_NAME, newItemName);
         args.put(KEY_BOX_DESC, newItemDescription);
+        args.put(KEY_UPDATED, 1);
 
         return mDb.update(DATABASE_ITEM_TABLE, args, KEY_ITEM_ID + "=" + itemID, null) > 0;
 		

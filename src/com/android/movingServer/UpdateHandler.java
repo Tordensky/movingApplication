@@ -22,6 +22,17 @@ public class UpdateHandler{
 		mDbHelper = new MovingDbAdapter(context);
 	}
 	
+	// TODO CREATE METHOD
+	public String createUpdateMessage(){
+		
+		return "UPDATE MESSAGE";
+	}
+	
+	// TODO IMPLEMENT
+	public void updateIDSafterPOST(){
+		
+	}
+	
 	
 	public void updateFromSync(String body){
 		mDbHelper.open();
