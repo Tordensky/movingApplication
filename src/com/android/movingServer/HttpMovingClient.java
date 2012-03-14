@@ -62,7 +62,7 @@ public class HttpMovingClient extends IntentService {
 					print("ERROR IN TIMER");
 					e.printStackTrace();
 				} finally {
-					//stopSelf();
+					//;
 				}
 		//	}
 		//}, 0, UPDATE_INTERVAL);
@@ -99,7 +99,6 @@ public class HttpMovingClient extends IntentService {
 			HttpClient movingClient = new DefaultHttpClient();
 			
 			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-			//SharedPreferences.Editor editor = settings.edit();
 			
 			lastConnTime = settings.getLong("lastConnectionTimeStamp", 0);
 						
@@ -107,19 +106,19 @@ public class HttpMovingClient extends IntentService {
 
 			HttpResponse response = movingClient.execute(getTest);
 
-			input = new BufferedReader
+/*			input = new BufferedReader
 			(new InputStreamReader(response.getEntity().getContent()));
 
 			StringBuffer sb = new StringBuffer("");
 			String line = "";
-			//String NL = System.getProperty("line.separator");
 
 			while((line = input.readLine()) != null) {
 				sb.append(line);
 			}
 
 			input.close();
-			String result = sb.toString();
+			String result = sb.toString();*/
+			String result = responseToString(response);
 			print (result);
 			updateHandler.updateFromSync(result);//updateFromInput(result);
 			broadcastUpdate();
@@ -173,30 +172,22 @@ public class HttpMovingClient extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {		
-		while(true){
-			try {
-				executeHttpGetTimer();
-				Thread.sleep(10000);
-				executeHttpPost();
-				Thread.sleep(10000);
-				print("ON HANDLE INTENT");
-			} catch (Exception e){
-				e.printStackTrace();
-			}
+		try {
+			executeHttpGetTimer();
+			executeHttpPost();
+		} catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 	
     @Override
-    public void onDestroy() {
-    	super.onDestroy();
-    	//timer.cancel();
-        // Tell the user we stopped.
-        Toast.makeText(this, "SERVICE DESTROYED", Toast.LENGTH_SHORT).show();
+    public void onDestroy() {   	
+        Toast.makeText(this, "SYNC FINISHED", Toast.LENGTH_SHORT).show();
+        super.onDestroy();
     }
 
 	
-	private void broadcastUpdate(){
-		
+	private void broadcastUpdate(){		
 		/*Sends Response to application*/
 		Intent broadcastIntent = new Intent();
 		broadcastIntent.setAction(ResponseReceiver.ACTION_RESP);

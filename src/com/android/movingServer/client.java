@@ -37,7 +37,7 @@ public class Client extends Activity {
         IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new ResponseReceiver();
-        registerReceiver(receiver, filter);
+        registerReceiver(receiver, filter); 
 		
         setupSharedPreferences();
         
@@ -86,22 +86,7 @@ public class Client extends Activity {
 		Intent i = new Intent(this, Search.class);
 		startActivity(i);
 	}
-	
-
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
 		
-		//stopService(new Intent(this, HttpMovingClient.class));
-		super.onDestroy();
-	}
-	
-	protected void onDestroy(){
-		super.onDestroy();
-		stopService(new Intent(this, HttpMovingClient.class));
-	}
-	
-	
 	private void startHttpService() {
 		Intent i = new Intent(this, HttpMovingClient.class);
 		startService(i);
@@ -120,16 +105,18 @@ public class Client extends Activity {
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
 			// TODO Auto-generated method stub
-			print_msg("DETTE FUNKA FADERMEG", 1000);
+			//print_msg("DETTE FUNKA FADERMEG", 1000);
 		}	
 	}
-	
-	
 
 /*	@Override
-	protected void onStop() {
+	protected void onPause() {
 		// TODO Auto-generated method stub
-		super.onStop();
+		unregisterReceiver(receiver);
+		stopService(new Intent(this, HttpMovingClient.class));
+		super.onPause();
 	}*/
+				
+
 
 }

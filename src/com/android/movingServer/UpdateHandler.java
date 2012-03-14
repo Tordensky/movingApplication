@@ -37,7 +37,11 @@ public class UpdateHandler{
 			updateMessage.put("UpdatedBoxes", mDbHelper.getBoxesUpdatedAfter());
 			updateMessage.put("UpdatedItems", mDbHelper.getItemsUpdatedAfter());
 			
-			mDbHelper.resetUpdateFlags();
+			updateMessage.put("DeletedLocations", mDbHelper.getLocationsDeletedAfter());
+			updateMessage.put("DeletedBoxes", mDbHelper.getBoxesDeletedAfter());
+			updateMessage.put("DeletedItems", mDbHelper.getItemsDeletedAfter());
+			
+			
 			mDbHelper.close();
 			return updateMessage.toString();
 		} catch (Exception e) {
@@ -50,43 +54,49 @@ public class UpdateHandler{
 	
 	// TODO IMPLEMENT
 	public void updateIDSafterPOST(String body){
-		mDbHelper.open();
+		
 		try {
-			Log.e("UPDATE BODY",body);
-			JSONObject newIDs = new JSONObject(body);			
-			
-			// BOXES
-			JSONObject locationIDs = newIDs.getJSONObject("LocationIdMap");
-			Iterator<String> locationIter = locationIDs.keys();
-			while(locationIter.hasNext()){
-				String keyName = locationIter.next();
-				Long newID = locationIDs.getLong(keyName);
-				Log.i("NEW IDS", keyName+" : "+newID.toString());
-				mDbHelper.setRemoteIdLocations(Long.parseLong(keyName), newID);
-			}
-			
-			// Boxes
-			JSONObject boxIDs = newIDs.getJSONObject("BoxIdMap");
-			Iterator<String> boxIter = boxIDs.keys();
-			while(boxIter.hasNext()){
-				String keyName = boxIter.next();
-				Long newID = boxIDs.getLong(keyName);
-				Log.i("NEW IDS", keyName+" : "+newID.toString());
-				mDbHelper.setRemoteIdBoxes(Long.parseLong(keyName), newID);
-			}
-			
-			// Items
-			JSONObject itemIDs = newIDs.getJSONObject("ItemIdMap");
-			Iterator<String> itemIter = itemIDs.keys();
-			while(itemIter.hasNext()){
-				String keyName = itemIter.next();
-				Long newID = itemIDs.getLong(keyName);
-				Log.i("NEW IDS", keyName+" : "+newID.toString());
-				mDbHelper.setRemoteIdItems(Long.parseLong(keyName), newID);
-			}
-			
-			
-			mDbHelper.close();
+			JSONObject newIDs = new JSONObject(body);	
+			if ((newIDs.getString("Status").compareTo("OK")) == 0){
+				Log.e("UPDATE BODY",body);
+						
+				mDbHelper.open();
+				// BOXES
+				JSONObject locationIDs = newIDs.getJSONObject("LocationIdMap");
+				Iterator<String> locationIter = locationIDs.keys();
+				while(locationIter.hasNext()){
+					String keyName = locationIter.next();
+					Long newID = locationIDs.getLong(keyName);
+					Log.i("NEW IDS", keyName+" : "+newID.toString());
+					mDbHelper.setRemoteIdLocations(Long.parseLong(keyName), newID);
+				}
+				
+				// Boxes
+				JSONObject boxIDs = newIDs.getJSONObject("BoxIdMap");
+				Iterator<String> boxIter = boxIDs.keys();
+				while(boxIter.hasNext()){
+					String keyName = boxIter.next();
+					Long newID = boxIDs.getLong(keyName);
+					Log.i("NEW IDS", keyName+" : "+newID.toString());
+					mDbHelper.setRemoteIdBoxes(Long.parseLong(keyName), newID);
+				}
+				
+				// Items
+				JSONObject itemIDs = newIDs.getJSONObject("ItemIdMap");
+				Iterator<String> itemIter = itemIDs.keys();
+				while(itemIter.hasNext()){
+					String keyName = itemIter.next();
+					Long newID = itemIDs.getLong(keyName);
+					Log.i("NEW IDS", keyName+" : "+newID.toString());
+					mDbHelper.setRemoteIdItems(Long.parseLong(keyName), newID);
+				}
+				
+				mDbHelper.deleteFromFlag();
+				
+				mDbHelper.resetUpdateFlags();
+				mDbHelper.close();
+				}
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

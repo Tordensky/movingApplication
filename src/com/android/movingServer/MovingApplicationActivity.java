@@ -40,11 +40,13 @@ public class MovingApplicationActivity extends ListActivity {
 	private static final int EDIT_BOX = Menu.FIRST + 2;
 	private static final int CREATE_TAG = Menu.FIRST + 3;
 	private static final int READ_BOX_TAG = Menu.FIRST + 4;
+	private static final int REFRESH = Menu.FIRST + 5;
 	
 	private EditText boxSearchField;
 	private String boxSearchString;
 	
 	private ResponseReceiver receiver;
+	private IntentFilter filter;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,12 +81,11 @@ public class MovingApplicationActivity extends ListActivity {
 			}
 		});
         
-        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+        filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new ResponseReceiver();
-        registerReceiver(receiver, filter);
-		
         
+		        
         registerForContextMenu(getListView());
     }
     
@@ -108,6 +109,7 @@ public class MovingApplicationActivity extends ListActivity {
         super.onCreateOptionsMenu(menu);
         menu.add(0, INSERT_ID, 0, R.string.addBoxMenu);
         menu.add(0, READ_BOX_TAG, 0, R.string.readBoxTag);
+        menu.add(0, REFRESH, 0, R.string.refresh);
         return true;
     }
     
@@ -120,7 +122,12 @@ public class MovingApplicationActivity extends ListActivity {
         	
         case READ_BOX_TAG:
         	readTag();
+        
+        
+        case REFRESH:
+        	startHttpService();
         }
+    	
         
         
         return super.onMenuItemSelected(featureId, item);
@@ -157,6 +164,8 @@ public class MovingApplicationActivity extends ListActivity {
 	        i.putExtra(MovingDbAdapter.KEY_BOX_DESC, c.getString(
 	                c.getColumnIndexOrThrow(MovingDbAdapter.KEY_BOX_DESC)));
 	        startActivityForResult(i, ACTIVITY_EDIT_BOX);
+	        
+	        startHttpService();
 			return true;
 		
     	case CREATE_TAG:
@@ -195,6 +204,11 @@ public class MovingApplicationActivity extends ListActivity {
     	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
     	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
     }
+    
+	private void startHttpService() {
+		Intent i = new Intent(this, HttpMovingClient.class);
+		startService(i);
+	}
     
 /*    private void enableDisableView(View view, boolean enabled) {
         view.setEnabled(enabled);
@@ -279,4 +293,19 @@ public class MovingApplicationActivity extends ListActivity {
 			fillData();
 		}	
 	}
+
+	@Override
+	protected void onPause() {
+		unregisterReceiver(receiver);
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		registerReceiver(receiver, filter);
+		startHttpService();
+		super.onResume();
+	}
+	
+	
 }

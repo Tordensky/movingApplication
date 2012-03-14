@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Moving Assistant</string>
+    <string name="app_name">Pack It Up</string>
     <string name="addBoxMenu">New Box</string>
     <string name="boxName">Name</string>
     <string name="boxDescription">Description</string>
@@ -18,4 +18,5 @@
     <string name="search">Search</string>
     <string name="searchBoxHint">tap to search</string>
     <string name="itemListMenuDelete">Delete Item</string>
+    <string name="refresh">Refresh</string>
 </resources>

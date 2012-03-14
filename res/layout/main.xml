@@ -4,42 +4,53 @@
     android:layout_height="fill_parent"
     android:gravity="top"
     android:orientation="vertical" 
->
-
-    <ImageView
+>
+    <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo" />
+        android:layout_height="150dp"
+        android:src="@drawable/packitup" />
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/main_menu_bkgr"
         android:gravity="top"
         android:orientation="vertical"
         android:padding="10px" >
-    
+    
 	    <Button
 	        android:id="@+id/gotoBoxMenuButton"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:text="View Boxes"
-	        android:textSize="40px"
+	        android:layout_marginBottom="10dp"
+	        android:background="@drawable/menu_button"
 	        android:padding="20px"
-	        android:background="@drawable/button"
-	         />
-	    
+	        android:text="View Boxes"
+	        android:textColor="#FFFFFF"
+	        android:textSize="40px" />
+	    
 	    <Button
 	        android:id="@+id/gotoSearchMenuButton"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="10dp"
+	        android:background="@drawable/menu_button"
+	        android:padding="20px"
 	        android:text="View Items"
+	        android:textColor="#FFFFFF"
+	        android:textSize="40px" />
+	    
+   	    <Button
+	        android:id="@+id/gotoSearchMenuButton"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="View Locations"
 	        android:textSize="40px"
 	        android:padding="20px"
-	        android:background="@drawable/button"
+	        android:textColor="#FFFFFF"
+	        android:background="@drawable/menu_button"
 	         />
 	</LinearLayout>
 </LinearLayout>

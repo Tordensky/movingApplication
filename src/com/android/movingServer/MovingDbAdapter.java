@@ -565,6 +565,25 @@ public class MovingDbAdapter {
 		return cursorToJSON(cursor);
 	}
 	
+	public JSONArray getLocationsDeletedAfter(){
+		String where = KEY_DELETED + "= 1";
+		Cursor cursor = mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_REMOTE_LID}, where, null, null, null, null);
+		return cursorToJSON(cursor);
+	}
+	
+	public JSONArray getBoxesDeletedAfter(){
+		String where = KEY_DELETED + "= 1";
+		Cursor cursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_REMOTE_BID}, where, null, null, null, null);
+		return cursorToJSON(cursor);	
+	}
+	
+	public JSONArray getItemsDeletedAfter(){
+		String where = KEY_DELETED + "= 1";
+		Cursor cursor = mDb.query(DATABASE_ITEM_TABLE, new String[] {KEY_ITEM_REMOTE_ID}, where, null, null, null, null);
+		return cursorToJSON(cursor);
+		
+	}
+	
 	private JSONArray cursorToJSON(Cursor cursor){
 		JSONArray result = new JSONArray();
 		cursor.moveToFirst();
@@ -586,6 +605,12 @@ public class MovingDbAdapter {
 			result.put(row);
 		}				
 		return result;
+	}
+	
+	public void deleteFromFlag(){
+		mDb.delete(DATABASE_LOCATIONS_TABLE, KEY_DELETED + "= 1", null);
+		mDb.delete(DATABASE_BOX_TABLE, KEY_DELETED + "= 1", null);
+		mDb.delete(DATABASE_ITEM_TABLE, KEY_DELETED + "= 1", null);
 	}
 	
 	public void setRemoteIdLocations(long rowID, long LID){
