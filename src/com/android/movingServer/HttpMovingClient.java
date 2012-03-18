@@ -28,33 +28,43 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class HttpMovingClient.
+ */
 public class HttpMovingClient extends IntentService {
 
+	/**
+	 * Instantiates a new http moving client.
+	 */
 	public HttpMovingClient() {
 		super("HttpThread");
 	}
 
-	private final IBinder mBinder = new MyBinder();
-	private static final long UPDATE_INTERVAL = 10000;
 	//private Timer timer = new Timer();
+	/** The Constant PREFS_NAME. */
 	public static final String PREFS_NAME = "MyPrefsFile";
 
+	/** The update handler. */
 	private UpdateHandler updateHandler;
 	
+	/** The server uri. */
 	private String serverURI = "http://movingapp.no-ip.org:47301";
 
+	/* (non-Javadoc)
+	 * @see android.app.IntentService#onCreate()
+	 */
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		updateHandler = new UpdateHandler(this);
-		
-		
+		updateHandler = new UpdateHandler(this);	
 	}
 	
+	/**
+	 * Execute http get timer.
+	 */
 	public void executeHttpGetTimer(){
-		//timer.scheduleAtFixedRate(new TimerTask() {		
-			//@Override
-		//public void run() {
+
 				try {
 					executeHttpGet();
 					
@@ -64,10 +74,12 @@ public class HttpMovingClient extends IntentService {
 				} finally {
 					//;
 				}
-		//	}
-		//}, 0, UPDATE_INTERVAL);
+
 	}
 	
+	/**
+	 * Execute http post.
+	 */
 	public void executeHttpPost() {
 		try {
 			HttpClient movingClient = new DefaultHttpClient();
@@ -91,33 +103,21 @@ public class HttpMovingClient extends IntentService {
 		}
 	}
 	
+	/**
+	 * Execute http get.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void executeHttpGet() throws Exception {
 
 		BufferedReader input = null;
 		long lastConnTime = 0;
 		try {
-			HttpClient movingClient = new DefaultHttpClient();
-			
-			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-			
-			lastConnTime = settings.getLong("lastConnectionTimeStamp", 0);
-						
+			HttpClient movingClient = new DefaultHttpClient();		
+			SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);		
+			lastConnTime = settings.getLong("lastConnectionTimeStamp", 0);						
 			HttpGet getTest = new HttpGet(new URI(serverURI+"/updates/"+lastConnTime));
-
 			HttpResponse response = movingClient.execute(getTest);
-
-/*			input = new BufferedReader
-			(new InputStreamReader(response.getEntity().getContent()));
-
-			StringBuffer sb = new StringBuffer("");
-			String line = "";
-
-			while((line = input.readLine()) != null) {
-				sb.append(line);
-			}
-
-			input.close();
-			String result = sb.toString();*/
 			String result = responseToString(response);
 			print (result);
 			updateHandler.updateFromSync(result);//updateFromInput(result);
@@ -135,6 +135,13 @@ public class HttpMovingClient extends IntentService {
 		}
 	}
 	
+	/**
+	 * Response to string.
+	 *
+	 * @param response the response
+	 * @return the string
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private String responseToString(HttpResponse response) throws IOException{
 		BufferedReader input = null;
 		input = new BufferedReader
@@ -152,6 +159,9 @@ public class HttpMovingClient extends IntentService {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.IntentService#onBind(android.content.Intent)
+	 */
 	@Override
 	public IBinder onBind(Intent arg0) {
 		// TODO Auto-generated method stub
@@ -159,17 +169,34 @@ public class HttpMovingClient extends IntentService {
 		return null;
 	}
 
+	/**
+	 * The Class MyBinder.
+	 */
 	public class MyBinder extends Binder {
+		
+		/**
+		 * Gets the service.
+		 *
+		 * @return the service
+		 */
 		HttpMovingClient getService() {
 			return HttpMovingClient.this;
 		} 
 	}
 
+	/**
+	 * Prints the.
+	 *
+	 * @param Text the text
+	 */
 	private void print (String Text){
 		Log.i(getClass().getSimpleName(), "TIMER EVENT PRINT --< "+Text+" >--");
 		//Toast.makeText(this, Text, 1000).show();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.IntentService#onHandleIntent(android.content.Intent)
+	 */
 	@Override
 	protected void onHandleIntent(Intent intent) {		
 		try {
@@ -180,13 +207,18 @@ public class HttpMovingClient extends IntentService {
 		}
 	}
 	
+    /* (non-Javadoc)
+     * @see android.app.IntentService#onDestroy()
+     */
     @Override
     public void onDestroy() {   	
         Toast.makeText(this, "SYNC FINISHED", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 
-	
+	/**
+	 * Broadcast update.
+	 */
 	private void broadcastUpdate(){		
 		/*Sends Response to application*/
 		Intent broadcastIntent = new Intent();

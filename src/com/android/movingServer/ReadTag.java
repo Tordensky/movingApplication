@@ -5,8 +5,15 @@ import android.os.Bundle;
 import android.view.Window;
 import uit.nfc.EasyNfcReaderActivity;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ReadTag.
+ */
 public class ReadTag extends EasyNfcReaderActivity{
 
+	/* (non-Javadoc)
+	 * @see uit.nfc.EasyNfcReaderActivity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -14,6 +21,9 @@ public class ReadTag extends EasyNfcReaderActivity{
 		setContentView(R.layout.scann_tag);
 	}
 
+	/* (non-Javadoc)
+	 * @see uit.nfc.EasyNfcReaderActivity#onNewIntent(android.content.Intent)
+	 */
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -33,6 +43,9 @@ public class ReadTag extends EasyNfcReaderActivity{
 		finish();	
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
 	    Intent mIntent = new Intent();

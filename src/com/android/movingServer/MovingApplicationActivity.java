@@ -24,30 +24,63 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MovingApplicationActivity.
+ */
 public class MovingApplicationActivity extends ListActivity {
     /** Called when the activity is first created. */
     
 	private static final int ACTIVITY_CREATE_BOX = 0;
+	
+	/** The Constant ACTIVITY_EDIT_BOX. */
 	private static final int ACTIVITY_EDIT_BOX = 1;
+	
+	/** The Constant ACTIVTY_ITEMS_LIST. */
 	private static final int ACTIVTY_ITEMS_LIST = 2;
+	
+	/** The Constant ACTIVTY_READ_TAG. */
 	private static final int ACTIVTY_READ_TAG = 3;
 	
+	/** The m db helper. */
 	private MovingDbAdapter mDbHelper;
+	
+	/** The m moving cursor. */
 	private Cursor mMovingCursor;
 	
+	/** The Constant INSERT_ID. */
 	private static final int INSERT_ID = Menu.FIRST;
+	
+	/** The Constant DELETE_ID. */
 	private static final int DELETE_ID = Menu.FIRST + 1;
+	
+	/** The Constant EDIT_BOX. */
 	private static final int EDIT_BOX = Menu.FIRST + 2;
+	
+	/** The Constant CREATE_TAG. */
 	private static final int CREATE_TAG = Menu.FIRST + 3;
+	
+	/** The Constant READ_BOX_TAG. */
 	private static final int READ_BOX_TAG = Menu.FIRST + 4;
+	
+	/** The Constant REFRESH. */
 	private static final int REFRESH = Menu.FIRST + 5;
 	
+	/** The box search field. */
 	private EditText boxSearchField;
+	
+	/** The box search string. */
 	private String boxSearchString;
 	
+	/** The receiver. */
 	private ResponseReceiver receiver;
+	
+	/** The filter. */
 	private IntentFilter filter;
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +122,9 @@ public class MovingApplicationActivity extends ListActivity {
         registerForContextMenu(getListView());
     }
     
+    /**
+     * Fill data.
+     */
     private void fillData() {
     	//Toast.makeText(this, "Fill data", 1000).show();
     	
@@ -104,6 +140,9 @@ public class MovingApplicationActivity extends ListActivity {
     	setListAdapter(boxes);
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -113,6 +152,9 @@ public class MovingApplicationActivity extends ListActivity {
         return true;
     }
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onMenuItemSelected(int, android.view.MenuItem)
+     */
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch(item.getItemId()) {
@@ -133,6 +175,9 @@ public class MovingApplicationActivity extends ListActivity {
         return super.onMenuItemSelected(featureId, item);
     }
     
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
+	 */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
@@ -143,6 +188,9 @@ public class MovingApplicationActivity extends ListActivity {
 		
 	}
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
+     */
     @Override
 	public boolean onContextItemSelected(MenuItem item) {
     	AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -176,22 +224,36 @@ public class MovingApplicationActivity extends ListActivity {
     	return super.onContextItemSelected(item);
 	}
     
+    /* (non-Javadoc)
+     * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+     */
     protected void onListItemClick(ListView l, View v, int position, long id){
     	super.onListItemClick(l, v, position, id);
     	gotoBox(id);
     }
 	
 	
+    /**
+     * Creates the box.
+     */
     private void createBox() {
     	Intent i = new Intent(this, BoxEdit.class);
     	startActivityForResult(i, ACTIVITY_CREATE_BOX);
     }
     
+	/**
+	 * Read tag.
+	 */
 	private void readTag() {
 		Intent i = new Intent(this, ReadTag.class);
 		startActivityForResult(i, ACTIVTY_READ_TAG);	
 	}
     
+    /**
+     * Creates the tag.
+     *
+     * @param BID the bID
+     */
     private void createTag(long BID) {
     	long remoteID = mDbHelper.getRemoteBIDforRowID(BID);
     	if (remoteID == 0){
@@ -204,12 +266,22 @@ public class MovingApplicationActivity extends ListActivity {
     	}
     }
     
+    /**
+     * Creates the items.
+     *
+     * @param BID the bID
+     */
     private void createItems(long BID){
     	Intent i = new Intent(this, ItemEdit.class);
     	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
     	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
     }
     
+    /**
+     * Goto box.
+     *
+     * @param BID the bID
+     */
     private void gotoBox(long BID){
     	
     	Intent i = new Intent(this, itemList.class);
@@ -217,6 +289,9 @@ public class MovingApplicationActivity extends ListActivity {
     	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
     }
     
+	/**
+	 * Start http service.
+	 */
 	private void startHttpService() {
 		Intent i = new Intent(this, HttpMovingClient.class);
 		startService(i);
@@ -235,7 +310,10 @@ public class MovingApplicationActivity extends ListActivity {
     }*/
 
     
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    /* (non-Javadoc)
+ * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+ */
+protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
     	super.onActivityResult(requestCode, resultCode, intent);
     	
     	Bundle extras;
@@ -300,10 +378,18 @@ public class MovingApplicationActivity extends ListActivity {
 
     }
     
+	/**
+	 * The Class ResponseReceiver.
+	 */
 	public class ResponseReceiver extends BroadcastReceiver {
+		
+		/** The Constant ACTION_RESP. */
 		public static final String ACTION_RESP =
 		      "com.mamlambo.intent.action.MESSAGE_PROCESSED";
 
+		/* (non-Javadoc)
+		 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+		 */
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
 			// TODO Auto-generated method stub
@@ -311,12 +397,18 @@ public class MovingApplicationActivity extends ListActivity {
 		}	
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onPause()
+	 */
 	@Override
 	protected void onPause() {
 		unregisterReceiver(receiver);
 		super.onPause();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override
 	protected void onResume() {
 		registerReceiver(receiver, filter);
@@ -324,6 +416,11 @@ public class MovingApplicationActivity extends ListActivity {
 		super.onResume();
 	}
 	
+	/**
+	 * Prints the.
+	 *
+	 * @param Text the text
+	 */
 	private void print (String Text){
 		//Log.i(getClass().getSimpleName(), "TIMER EVENT PRINT --< "+Text+" >--");
 		Toast.makeText(this, Text, 1000).show();

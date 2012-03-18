@@ -16,36 +16,46 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Client.
+ */
 public class Client extends Activity {
 
+	/** The http service. */
 	private HttpMovingClient httpService;
 	
-	private ResponseReceiver receiver;
+	/** The receiver. */
+//	private ResponseReceiver receiver;
 	
+	/** The Constant PREFS_NAME. */
 	public static final String PREFS_NAME = "MyPrefsFile";
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		setContentView(R.layout.main);
-		
+		setContentView(R.layout.main);	
 		setupMainMenu();
 		
-        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+/*        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new ResponseReceiver();
         registerReceiver(receiver, filter); 
-		
-        setupSharedPreferences();
-        
+*/		
+        setupSharedPreferences(); 
 		startHttpService();
 		
-		//doBindService();
 	}
 	
+	/**
+	 * Setup main menu.
+	 */
 	private void setupMainMenu(){
 		Button gotoBoxMenuButton = (Button) findViewById(R.id.gotoBoxMenuButton);
 		Button gotoSearchMenuButton = (Button) findViewById(R.id.gotoSearchMenuButton);
@@ -76,6 +86,9 @@ public class Client extends Activity {
 		});
 	}
 	
+	/**
+	 * Setup shared preferences.
+	 */
 	private void setupSharedPreferences(){
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
@@ -87,52 +100,54 @@ public class Client extends Activity {
 	}
 	
 	
+	/**
+	 * Start box list action.
+	 */
 	private void startBoxListAction(){
 		Intent i = new Intent(this, MovingApplicationActivity.class);
 		startActivity(i);
 	}
 	
+	/**
+	 * Start search action.
+	 */
 	private void startSearchAction(){
 		Intent i = new Intent(this, Search.class);
 		startActivity(i);
 	}
 	
+	/**
+	 * Start location action.
+	 */
 	private void startLocationAction(){
 		Intent i =  new Intent(this, LocationList.class);
 		startActivity(i);
 	}
 	
 		
+	/**
+	 * Start http service.
+	 */
 	private void startHttpService() {
 		Intent i = new Intent(this, HttpMovingClient.class);
 		startService(i);
-	}
+	}	
 	
-	private void print_msg(String message, int duration){
-		Toast.makeText(this, message, duration).show();
-		//Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-		//v.vibrate(100);
-	}
-	
+	/**
+	 * The Class ResponseReceiver.
+	 */
 	public class ResponseReceiver extends BroadcastReceiver {
+		
+		/** The Constant ACTION_RESP. */
 		public static final String ACTION_RESP =
 		      "com.mamlambo.intent.action.MESSAGE_PROCESSED";
 
+		/* (non-Javadoc)
+		 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+		 */
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
-			// TODO Auto-generated method stub
-			//print_msg("DETTE FUNKA FADERMEG", 1000);
+
 		}	
 	}
-
-/*	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		unregisterReceiver(receiver);
-		stopService(new Intent(this, HttpMovingClient.class));
-		super.onPause();
-	}*/
-				
-
-
 }

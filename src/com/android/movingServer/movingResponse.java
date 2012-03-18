@@ -10,8 +10,15 @@ import android.util.Log;
 
 import uit.nfc.ResponseListener;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class movingResponse.
+ */
 public class movingResponse implements ResponseListener  {
 
+	/* (non-Javadoc)
+	 * @see uit.nfc.ResponseListener#onResponseReceived(org.apache.http.HttpResponse, java.lang.String)
+	 */
 	@Override
 	public void onResponseReceived(HttpResponse response, String message) {
 		

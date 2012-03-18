@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package com.android.movingServer;
 
 
@@ -10,13 +13,25 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BoxEdit.
+ */
 public class BoxEdit extends Activity {
 	
+	/** The m box name text. */
 	private EditText mBoxNameText;
+	
+	/** The m box description text. */
 	private EditText mBoxDescriptionText;
+	
+	/** The m row id. */
 	private Long mRowId;
 
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,25 +75,5 @@ public class BoxEdit extends Activity {
 			}
 		});
 		
-		/*
-		confirmButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				
-				Bundle bundle = new Bundle();
-				
-				bundle.putString(MovingDbAdapter.KEY_BOX_NAME, mBoxNameText.getText().toString());
-				bundle.putString(MovingDbAdapter.KEY_BOX_DESC, mBoxDescriptionText.getText().toString());
-				
-				if (mRowId != null) {
-				    bundle.putLong(MovingDbAdapter.KEY_BOX_ID, mRowId);
-				}
-				
-				Intent mIntent = new Intent();
-				mIntent.putExtras(bundle);
-				setResult(RESULT_OK, mIntent);
-				finish();	
-			}
-		
-		});*/
 	}
 }

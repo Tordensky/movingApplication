@@ -18,16 +18,30 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Search.
+ */
 public class Search extends ListActivity {
 
+	/** The m db helper. */
 	private MovingDbAdapter mDbHelper;
+	
+	/** The m moving cursor. */
 	private Cursor mMovingCursor;
 	
+	/** The item search field. */
 	private EditText itemSearchField;
+	
+	/** The item search string. */
 	private String itemSearchString;
 	
+	/** The Constant DELETE_ID. */
 	private static final int DELETE_ID = Menu.FIRST;
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,6 +78,9 @@ public class Search extends ListActivity {
 		registerForContextMenu(getListView());
 	}
 	
+	/**
+	 * Fill data.
+	 */
 	private void fillData(){
 		
 		mDbHelper.open();
@@ -81,19 +98,30 @@ public class Search extends ListActivity {
     	mDbHelper.close();
 	}
 	
-	 protected void onListItemClick(ListView l, View v, int position, long id){
+	 /* (non-Javadoc)
+ 	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+ 	 */
+ 	protected void onListItemClick(ListView l, View v, int position, long id){
 	    	super.onListItemClick(l, v, position, id);
 	    	mDbHelper.open();
 	    	gotoBox(mDbHelper.boxIdFromItemId(id));
 	    }
 	 
-	 private void gotoBox(long BID){
+	 /**
+ 	 * Goto box.
+ 	 *
+ 	 * @param BID the bID
+ 	 */
+ 	private void gotoBox(long BID){
 	    	Intent i = new Intent(this, itemList.class);
 	    	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
 	    	mDbHelper.close();
 	    	startActivity(i);
 	    }
 	 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
+	 */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
@@ -102,6 +130,9 @@ public class Search extends ListActivity {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -121,6 +152,9 @@ public class Search extends ListActivity {
 		return super.onContextItemSelected(item);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onResume()
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();

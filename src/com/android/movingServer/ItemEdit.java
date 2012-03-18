@@ -11,15 +11,27 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.os.Vibrator;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ItemEdit.
+ */
 public class ItemEdit extends Activity{
 
+	/** The m item name text. */
 	private EditText mItemNameText;
+	
+	/** The m item description text. */
 	private EditText mItemDescriptionText;
 	
+	/** The m db helper. */
 	private MovingDbAdapter mDbHelper;
 	
+	/** The Current box id. */
 	private long CurrentBoxID;
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -82,12 +94,21 @@ public class ItemEdit extends Activity{
 		});
 	}
 	
+	/**
+	 * Start box view.
+	 */
 	private void startBoxView(){
 		Intent i = new Intent(this, itemList.class);
     	i.putExtra(MovingDbAdapter.KEY_BOX_ID, CurrentBoxID);
     	startActivity(i);
 	}
 	
+	/**
+	 * Print_msg.
+	 *
+	 * @param message the message
+	 * @param duration the duration
+	 */
 	private void print_msg(String message, int duration){
 		Toast.makeText(this, message, duration).show();
 		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

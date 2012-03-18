@@ -11,20 +11,37 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class UpdateHandler.
+ */
 public class UpdateHandler{
 
+	/** The m db helper. */
 	private MovingDbAdapter mDbHelper;
 	
+	/** The Constant PREFS_NAME. */
 	public static final String PREFS_NAME = "MyPrefsFile";
 	
+	/** The owners context. */
 	private Context ownersContext;
 	
+	/**
+	 * Instantiates a new update handler.
+	 *
+	 * @param context the context
+	 */
 	public UpdateHandler(Context context){
 		ownersContext = context;
 		mDbHelper = new MovingDbAdapter(context);
 	}
 	
 	// TODO CREATE METHOD
+	/**
+	 * Creates the update message.
+	 *
+	 * @return the string
+	 */
 	public String createUpdateMessage(){
 		try {
 			mDbHelper.open();
@@ -53,6 +70,11 @@ public class UpdateHandler{
 	}
 	
 	// TODO IMPLEMENT
+	/**
+	 * Update id safter post.
+	 *
+	 * @param body the body
+	 */
 	public void updateIDSafterPOST(String body){
 		
 		try {
@@ -105,6 +127,11 @@ public class UpdateHandler{
 	}
 	
 	
+	/**
+	 * Update from sync.
+	 *
+	 * @param body the body
+	 */
 	public void updateFromSync(String body){
 		mDbHelper.open();
 		try {
@@ -133,6 +160,12 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Creates the locations from input.
+	 *
+	 * @param locations the locations
+	 * @throws JSONException the jSON exception
+	 */
 	private void createLocationsFromInput(JSONArray locations) throws JSONException{
 		for (int i = 0; i < locations.length(); i++){
 			JSONObject location = locations.getJSONObject(i);
@@ -141,6 +174,12 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Creates the boxes from input.
+	 *
+	 * @param boxes the boxes
+	 * @throws JSONException the jSON exception
+	 */
 	private void createBoxesFromInput(JSONArray boxes) throws JSONException{
 		for (int i = 0; i < boxes.length(); i++){
 			JSONObject box = boxes.getJSONObject(i);
@@ -149,6 +188,12 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Creates the items from input.
+	 *
+	 * @param items the items
+	 * @throws JSONException the jSON exception
+	 */
 	private void createItemsFromInput(JSONArray items) throws JSONException{
 		for (int i = 0; i < items.length(); i++){
 			JSONObject item = items.getJSONObject(i);
@@ -157,6 +202,12 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Update locations from input.
+	 *
+	 * @param locations the locations
+	 * @throws JSONException the jSON exception
+	 */
 	private void updateLocationsFromInput(JSONArray locations) throws JSONException {
 		for (int i = 0; i < locations.length(); i++){
 			JSONObject location = locations.getJSONObject(i);
@@ -164,6 +215,12 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Update boxes from input.
+	 *
+	 * @param boxes the boxes
+	 * @throws JSONException the jSON exception
+	 */
 	private void updateBoxesFromInput(JSONArray boxes) throws JSONException {
 		for (int i = 0; i < boxes.length(); i++){
 			JSONObject box = boxes.getJSONObject(i);
@@ -171,6 +228,12 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Update items from input.
+	 *
+	 * @param items the items
+	 * @throws JSONException the jSON exception
+	 */
 	private void updateItemsFromInput(JSONArray items) throws JSONException {
 		for (int i = 0; i < items.length(); i++){
 			JSONObject item = items.getJSONObject(i);
@@ -178,6 +241,12 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Delete locations from input.
+	 *
+	 * @param locations the locations
+	 * @throws JSONException the jSON exception
+	 */
 	private void deleteLocationsFromInput(JSONArray locations) throws JSONException{
 		for (int i = 0; i < locations.length(); i++){
 			JSONObject location = locations.getJSONObject(i);
@@ -185,6 +254,12 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Delete boxes from input.
+	 *
+	 * @param boxes the boxes
+	 * @throws JSONException the jSON exception
+	 */
 	private void deleteBoxesFromInput(JSONArray boxes) throws JSONException{
 		for (int i = 0; i < boxes.length(); i++){
 			JSONObject box = boxes.getJSONObject(i);
@@ -192,6 +267,12 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Delete items from input.
+	 *
+	 * @param items the items
+	 * @throws JSONException the jSON exception
+	 */
 	private void deleteItemsFromInput(JSONArray items) throws JSONException{
 		for (int i = 0; i < items.length(); i++){
 			JSONObject item = items.getJSONObject(i);
@@ -201,6 +282,11 @@ public class UpdateHandler{
 	
 	
 		
+	/**
+	 * Update from input.
+	 *
+	 * @param result the result
+	 */
 	public void updateFromInput(String result){
 		mDbHelper.open();
 		try {
@@ -237,6 +323,11 @@ public class UpdateHandler{
 		}
 	}
 	
+	/**
+	 * Sets the connection time stamp.
+	 *
+	 * @param timeStamp the new connection time stamp
+	 */
 	private void setConnectionTimeStamp(long timeStamp){
 		SharedPreferences settings = ownersContext.getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();

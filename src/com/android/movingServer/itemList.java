@@ -15,22 +15,42 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class itemList.
+ */
 public class itemList extends ListActivity{
 
+	/** The Constant ACTIVITY_CREATE_ITEM. */
 	private static final int ACTIVITY_CREATE_ITEM = 0;
 	
+	/** The Constant INSERT_ID. */
 	private static final int INSERT_ID = Menu.FIRST;
+	
+	/** The Constant DELETE_ID. */
 	private static final int DELETE_ID = Menu.FIRST + 5;
 	
+	/** The m db helper. */
 	private MovingDbAdapter mDbHelper;
+	
+	/** The m moving cursor. */
 	private Cursor mMovingCursor;
 	
+	/** The Current box id. */
 	private long CurrentBoxID;
 	
+	/** The box name. */
 	TextView boxName;
+	
+	/** The box description. */
 	TextView boxDescription;
+	
+	/** The box location. */
 	TextView boxLocation;
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +75,9 @@ public class itemList extends ListActivity{
 	}
 	
 	
+	/**
+	 * Fill data.
+	 */
 	private void fillData(){
 		mMovingCursor = mDbHelper.getBoxFromID(CurrentBoxID);
 		mMovingCursor.moveToFirst();
@@ -83,6 +106,9 @@ public class itemList extends ListActivity{
     	setListAdapter(items);
 	}
 	
+    /* (non-Javadoc)
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -91,6 +117,9 @@ public class itemList extends ListActivity{
     }
     
     
+    /* (non-Javadoc)
+     * @see android.app.Activity#onMenuItemSelected(int, android.view.MenuItem)
+     */
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
     	switch (item.getItemId()){
@@ -104,6 +133,9 @@ public class itemList extends ListActivity{
     	return super.onContextItemSelected(item);
 	}
 	
+	/**
+	 * Creates the item.
+	 */
 	private void createItem() {
 		//mDbHelper.createItem(CurrentBoxID, "Korn", "Diverse småsaker");
 		Intent i = new Intent(this, ItemEdit.class);
@@ -111,6 +143,9 @@ public class itemList extends ListActivity{
     	startActivityForResult(i, ACTIVITY_CREATE_ITEM);
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onBackPressed()
+	 */
 	@Override
 	public void onBackPressed() {
 	    Intent mIntent = new Intent();
@@ -120,6 +155,9 @@ public class itemList extends ListActivity{
 	    super.onBackPressed();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
+	 */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
@@ -127,6 +165,9 @@ public class itemList extends ListActivity{
 		menu.add(0, DELETE_ID, 0, R.string.itemListMenuDelete);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		
