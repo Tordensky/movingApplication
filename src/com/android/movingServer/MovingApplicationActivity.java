@@ -193,13 +193,25 @@ public class MovingApplicationActivity extends ListActivity {
 	}
     
     private void createTag(long BID) {
+    	long remoteID = mDbHelper.getRemoteBIDforRowID(BID);
+    	if (remoteID == 0){
+    		print("MUST SYNC BEFORE TAG CAN BE CREATED");
+    	} else {
     	
-    	Intent i = new Intent(this, CreateTag.class);
-    	i.putExtra(CreateTag.TAG_TEXT, "BOX#"+BID);
-    	startActivity(i);
+	    	Intent i = new Intent(this, CreateTag.class);
+	    	i.putExtra(CreateTag.TAG_TEXT, "BOX#"+BID);
+	    	startActivity(i);
+    	}
+    }
+    
+    private void createItems(long BID){
+    	Intent i = new Intent(this, ItemEdit.class);
+    	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
+    	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
     }
     
     private void gotoBox(long BID){
+    	
     	Intent i = new Intent(this, itemList.class);
     	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
     	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
@@ -243,7 +255,7 @@ public class MovingApplicationActivity extends ListActivity {
             }
         	
         	
-        	gotoBox(mDbHelper.createBox(BoxName, BoxDescription));
+        	createItems(mDbHelper.createBox(BoxName, BoxDescription));
         	fillData();
         	break;
         
@@ -270,7 +282,12 @@ public class MovingApplicationActivity extends ListActivity {
 	        	
 	        	if (tagSplit[0].compareTo("BOX") == 0){
 	        		Toast.makeText(this, tagSplit[1], 1000).show();
-	        		gotoBox((long)Integer.parseInt(tagSplit[1]));
+	        		long rowID = mDbHelper.getLocalBIDfromBID((long)Integer.parseInt(tagSplit[1]));
+	        		if (rowID == 0){
+	        			print("Could not fin box");
+	        		} else {
+	        			gotoBox(rowID);
+	        		}
 	        		
 	        	}
         	} catch (Exception e){
@@ -305,6 +322,11 @@ public class MovingApplicationActivity extends ListActivity {
 		registerReceiver(receiver, filter);
 		startHttpService();
 		super.onResume();
+	}
+	
+	private void print (String Text){
+		//Log.i(getClass().getSimpleName(), "TIMER EVENT PRINT --< "+Text+" >--");
+		Toast.makeText(this, Text, 1000).show();
 	}
 	
 	

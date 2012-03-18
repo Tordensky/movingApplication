@@ -217,6 +217,10 @@ public class MovingDbAdapter {
     			KEY_DELETED +" = 0", null, null, null, KEY_BOX_NAME + " ASC");
     }
     
+    public Cursor fetchAllLocations(){
+    	return mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID, KEY_LOCATION_NAME, KEY_LOCATION_DESC}, null, null, null, null, null);
+    }
+    
     public Cursor fetchAllBoxesSearch(String search) {
     	if (search == null){
     		search = "";
@@ -351,7 +355,7 @@ public class MovingDbAdapter {
 		}
 	}
 	
-	private long getRemoteBIDforRowID(long rowID){
+	public long getRemoteBIDforRowID(long rowID){
 		Cursor tmpCursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_REMOTE_BID}, KEY_BOX_ID + " = " + rowID, null, null, null, null);
 		
 		try{
@@ -365,7 +369,7 @@ public class MovingDbAdapter {
 		}
 	}
 	
-	private long getLocalBIDfromBID(long BID){
+	public long getLocalBIDfromBID(long BID){
 		Cursor tmpCursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID}, KEY_BOX_REMOTE_BID + " = " + BID, null, null, null, null);
 		try{
 			tmpCursor.moveToFirst();

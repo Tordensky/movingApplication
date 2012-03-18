@@ -9,7 +9,7 @@
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="150dp"
-        android:src="@drawable/packitup" />
+        android:src="@drawable/logo_new" />
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,7 +19,7 @@
         android:gravity="top"
         android:orientation="vertical"
         android:padding="10px" >
-    
+    
 	    <Button
 	        android:id="@+id/gotoBoxMenuButton"
 	        android:layout_width="match_parent"
@@ -27,7 +27,7 @@
 	        android:layout_marginBottom="10dp"
 	        android:background="@drawable/menu_button"
 	        android:padding="20px"
-	        android:text="View Boxes"
+	        android:text="Boxes"
 	        android:textColor="#FFFFFF"
 	        android:textSize="40px" />
 	    
@@ -38,15 +38,27 @@
 	        android:layout_marginBottom="10dp"
 	        android:background="@drawable/menu_button"
 	        android:padding="20px"
-	        android:text="View Items"
+	        android:text="Items"
 	        android:textColor="#FFFFFF"
 	        android:textSize="40px" />
-	    
+	    
    	    <Button
-	        android:id="@+id/gotoSearchMenuButton"
+   	        android:id="@+id/gotoLocationsMenuButton"
+   	        android:layout_width="match_parent"
+   	        android:layout_height="wrap_content"
+   	        android:layout_marginBottom="10dp"
+   	        android:background="@drawable/menu_button"
+   	        android:padding="20px"
+   	        android:text="Locations"
+   	        android:textColor="#FFFFFF"
+   	        android:textSize="40px" />
+   	    
+ 	    <Button
+	        android:id="@+id/gotoLocationsMenuButton"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:text="View Locations"
+	        android:layout_marginBottom="10dp"
+	        android:text="Help"
 	        android:textSize="40px"
 	        android:padding="20px"
 	        android:textColor="#FFFFFF"

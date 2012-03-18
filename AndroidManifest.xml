@@ -27,6 +27,8 @@
         </activity>
         <activity android:name="Search"></activity>
         <service android:name="HttpMovingClient"></service>
+        <activity android:name="LocationList"></activity>
+        <activity android:name="CreateLocation"></activity>
        
 
 

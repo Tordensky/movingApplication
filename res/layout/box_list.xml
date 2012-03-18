@@ -5,19 +5,24 @@
     android:layout_height="fill_parent" 
     >
 
-    <ListView  	android:id="@+id/android:list"
-    			android:layout_width="fill_parent"
-    			android:layout_height="wrap_content"
-    			android:layout_alignParentTop="true"/>
+    <include 	
+        android:id="@+id/locationListHeader" 
+      	layout="@layout/header"
+  		android:layout_alignParentTop="true"
+       	/>
 
+    <ListView
+        android:id="@+id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/boxListViewSearchBox"
+        android:layout_below="@+id/locationListHeader" 
+        />
     
-    <include 	android:id="@+id/boxListViewSearchBox" 
-        		layout="@layout/search_box"
-        		/>
+    <include 	
+        android:id="@+id/boxListViewSearchBox" 
+		layout="@layout/search_box"
+        />
     
-	<TextView 	android:id="@+id/android:empty"
-          		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:text=""
-        		android:textSize="20sp"/>	
+
 </RelativeLayout >

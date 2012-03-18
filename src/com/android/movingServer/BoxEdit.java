@@ -15,6 +15,7 @@ public class BoxEdit extends Activity {
 	private EditText mBoxNameText;
 	private EditText mBoxDescriptionText;
 	private Long mRowId;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,7 @@ public class BoxEdit extends Activity {
 		    if (body != null) {
 		    	mBoxDescriptionText.setText(body);
 		    }
-		}
-		
+		}	
 		
 		confirmButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {

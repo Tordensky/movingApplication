@@ -1,0 +1,52 @@
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:background="#000000"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/new_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:background="@drawable/menu_button"
+            android:padding="5dip"
+            android:text="New"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/menu_button"
+            android:padding="5dip"
+            android:text="Search"
+            android:textColor="#ffffff" />
+
+    	<Button
+    	    android:id="@+id/tag_button"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_marginRight="5dp"
+    	    android:layout_weight="1"
+    	    android:background="@drawable/menu_button"
+    	    android:padding="5dip"
+    	    android:text="Find From Tag"
+    	    android:textColor="#ffffff" />
+        
+        <Button
+            android:id="@+id/refresh_button"
+            android:background="@drawable/menu_button"
+            android:padding="5dip"
+            android:textColor="#ffffff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Refresh" />
+
+    </LinearLayout>

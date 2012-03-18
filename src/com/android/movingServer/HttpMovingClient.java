@@ -41,7 +41,7 @@ public class HttpMovingClient extends IntentService {
 
 	private UpdateHandler updateHandler;
 	
-	private String serverURI = "http://129.242.22.95:47301";
+	private String serverURI = "http://movingapp.no-ip.org:47301";
 
 	@Override
 	public void onCreate() {

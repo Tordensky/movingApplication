@@ -49,6 +49,7 @@ public class Client extends Activity {
 	private void setupMainMenu(){
 		Button gotoBoxMenuButton = (Button) findViewById(R.id.gotoBoxMenuButton);
 		Button gotoSearchMenuButton = (Button) findViewById(R.id.gotoSearchMenuButton);
+		Button gotoLocationMenuButton = (Button) findViewById(R.id.gotoLocationsMenuButton);
 		
 		gotoBoxMenuButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -62,6 +63,15 @@ public class Client extends Activity {
 			@Override
 			public void onClick(View v) {
 				startSearchAction();
+			}
+		});
+		
+		gotoLocationMenuButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startLocationAction();
+				
 			}
 		});
 	}
@@ -86,6 +96,12 @@ public class Client extends Activity {
 		Intent i = new Intent(this, Search.class);
 		startActivity(i);
 	}
+	
+	private void startLocationAction(){
+		Intent i =  new Intent(this, LocationList.class);
+		startActivity(i);
+	}
+	
 		
 	private void startHttpService() {
 		Intent i = new Intent(this, HttpMovingClient.class);

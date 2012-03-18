@@ -39,8 +39,7 @@ public class itemList extends ListActivity{
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			CurrentBoxID = extras.getLong(MovingDbAdapter.KEY_BOX_ID);
-			
+			CurrentBoxID = extras.getLong(MovingDbAdapter.KEY_BOX_ID);		
 		}
 		
 		mDbHelper = new MovingDbAdapter(this);
@@ -117,6 +116,7 @@ public class itemList extends ListActivity{
 	    Intent mIntent = new Intent();
 	    setResult(RESULT_OK, mIntent);
 	    finish();
+	    
 	    super.onBackPressed();
 	}
 
