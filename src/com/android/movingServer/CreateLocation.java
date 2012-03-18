@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
@@ -31,14 +33,27 @@ public class CreateLocation extends Activity {
 	private MovingDbAdapter mDbHelper;
 	private Cursor mMovingCursor;
 	
+	private EditText locationName;
+	private EditText locationDescription;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.box_edit);
-		
+		setContentView(R.layout.box_edit);		
 		mDbHelper = new MovingDbAdapter(this);
 		
+		locationName = (EditText) findViewById(R.id.name);
+		locationDescription = (EditText) findViewById(R.id.description);
+		Button confirmButton = (Button) findViewById(R.id.confirm);
+		
+		confirmButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				createLocation();
+			}
+
+		});
 	}
 
 	@Override
@@ -52,6 +67,11 @@ public class CreateLocation extends Activity {
 		super.onResume();
 		mDbHelper.open();
 		fillData();
+	}
+	
+	private void createLocation() {
+		mDbHelper.createLocation(locationName.getText().toString(), locationDescription.getText().toString());	
+		finish();
 	}
 	
 	private void fillData(){
@@ -94,8 +114,7 @@ public class CreateLocation extends Activity {
 		            break;
 		        case 2:
 		            mIconView.setImageResource(R.drawable.house_green);
-		            break;
-		            
+		            break;	            
 		        case 3:
 		            mIconView.setImageResource(R.drawable.house_purple);
 		            break;

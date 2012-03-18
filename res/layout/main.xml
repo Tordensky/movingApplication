@@ -54,7 +54,7 @@
    	        android:textSize="40px" />
    	    
  	    <Button
-	        android:id="@+id/gotoLocationsMenuButton"
+	        android:id="@+id/gotoHelpMenuButton"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginBottom="10dp"

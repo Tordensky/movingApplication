@@ -60,6 +60,7 @@ public class Client extends Activity {
 		Button gotoBoxMenuButton = (Button) findViewById(R.id.gotoBoxMenuButton);
 		Button gotoSearchMenuButton = (Button) findViewById(R.id.gotoSearchMenuButton);
 		Button gotoLocationMenuButton = (Button) findViewById(R.id.gotoLocationsMenuButton);
+		Button gotoHelpMenuButton = (Button) findViewById(R.id.gotoHelpMenuButton);
 		
 		gotoBoxMenuButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -81,9 +82,17 @@ public class Client extends Activity {
 			@Override
 			public void onClick(View v) {
 				startLocationAction();
-				
 			}
 		});
+		
+		gotoHelpMenuButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startHelpAction();	
+			}
+		});
+		
 	}
 	
 	/**
@@ -132,6 +141,11 @@ public class Client extends Activity {
 		Intent i = new Intent(this, HttpMovingClient.class);
 		startService(i);
 	}	
+	
+	private void startHelpAction(){
+		Intent i = new Intent(this, Help.class);
+		startActivity(i);
+	}
 	
 	/**
 	 * The Class ResponseReceiver.
