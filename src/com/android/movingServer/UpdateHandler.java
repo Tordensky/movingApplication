@@ -304,7 +304,7 @@ public class UpdateHandler{
 			Log.i("log_tag", "BoxName: "+json_data.getString("boxName")
 					+ "BoxDescription: "+json_data.getString("boxDescription"));
 			
-			long boxID = mDbHelper.createBox(json_data.getString("boxName"), json_data.getString("boxDescription"));
+			long boxID = mDbHelper.createBox(json_data.getString("boxName"), json_data.getString("boxDescription"), json_data.getLong("boxLocation"));
 			
 			JSONArray itemArray = new JSONArray(json_data.getString("items"));
 			for (int j = 0; j < itemArray.length(); j++){

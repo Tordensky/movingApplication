@@ -1,9 +1,11 @@
 package com.android.movingServer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.android.movingServer.R;
+import com.android.movingServer.BoxEdit.MyOnItemSelectedListener;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.webkit.WebChromeClient.CustomViewCallback;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,21 +25,37 @@ import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 
 public class CreateLocation extends Activity {
 
 	// Spinner images
-	private static Integer[] imageIconDatabase = { R.drawable.blue_box, R.drawable.box };
-	private String[] imageNameDatabase = { "Blue", "White"};
-	private List<? extends Map<String, ?>> spinnerList;
+	private static Integer[] imageIconDatabase = { 	R.drawable.box_blue, 
+													R.drawable.box_green, 
+													R.drawable.box_orange, 
+													R.drawable.box_purple,
+													R.drawable.box_yellow, 
+													R.drawable.box_darkpurple 
+													};
 	
+	private String[] imageNameDatabase = { 			"Blue", 
+													"Green",
+													"Orange",
+													"Purple",
+													"Yellow",
+													"Dark Purple"
+													};
 	
+	private List<Map<String, ?>> datalist;
+		
 	private MovingDbAdapter mDbHelper;
 	private Cursor mMovingCursor;
 	
 	private EditText locationName;
 	private EditText locationDescription;
+	private long colorCode;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +64,24 @@ public class CreateLocation extends Activity {
 		setContentView(R.layout.box_edit);		
 		mDbHelper = new MovingDbAdapter(this);
 		
+		TextView header = (TextView) findViewById(R.id.actionName);
+		header.setText("Create Location");
+		
+		ImageView image = (ImageView) findViewById(R.id.typeImage);
+		image.setImageResource(R.drawable.house_blue);
+		
 		locationName = (EditText) findViewById(R.id.name);
+		locationName.setHint("Tap to enter location name");
 		locationDescription = (EditText) findViewById(R.id.description);
+		locationDescription.setHint("Tap to enter location Description");
 		Button confirmButton = (Button) findViewById(R.id.confirm);
+		confirmButton.setText("Create Location");
 		
 		confirmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				createLocation();
 			}
-
 		});
 	}
 
@@ -66,64 +95,50 @@ public class CreateLocation extends Activity {
 	protected void onResume() {
 		super.onResume();
 		mDbHelper.open();
-		fillData();
+		setupColorSpinner();
+		//fillData();
 	}
 	
 	private void createLocation() {
-		mDbHelper.createLocation(locationName.getText().toString(), locationDescription.getText().toString());	
+		mDbHelper.createLocation(locationName.getText().toString(), locationDescription.getText().toString(), colorCode);	
 		finish();
 	}
-	
-	private void fillData(){
-		mMovingCursor = mDbHelper.fetchAllLocations();
 		
-		//startManagingCursor(mMovingCursor);
+	void setupColorSpinner(){
+		
+		datalist = new ArrayList<Map<String, ?>>();
+		Map<String, Object> map;
+		
+		for (int i = 0; i < imageNameDatabase.length; i++){
+			map = new HashMap<String, Object>();
+			map.put("Name", imageNameDatabase[i]);
+			map.put("Icon", imageIconDatabase[i]);
+			datalist.add(map);
+		}
 		
 		Spinner mSpinner = (Spinner) findViewById(R.id.spinner1);
 		
-		String[] from = new String[]{MovingDbAdapter.KEY_LOCATION_NAME, MovingDbAdapter.KEY_LOCATION_ID};
-		
 		int[] to = new int[]{R.id.imageNameSpinner, R.id.imageIconSpinner};
 		
-		SimpleCursorAdapter items = 
-			new SimpleCursorAdapter(this, R.layout.spinner_view, mMovingCursor, from, to);
+		String[] from = new String[]{"Name", "Icon"};
 		
-		items.setViewBinder(new SpinnerViewBinder());
-		mSpinner.setAdapter(items);
+		SimpleAdapter colors = 
+			new SimpleAdapter(this, datalist, R.layout.spinner_view, from , to);
+		
+		mSpinner.setAdapter(colors);
+		mSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
 	}
+	
+	public class MyOnItemSelectedListener implements OnItemSelectedListener {
 
-	public class SpinnerViewBinder implements SimpleCursorAdapter.ViewBinder {
-		 
-		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		    int viewId = view.getId();
-		    switch (viewId) {
-		    case R.id.imageNameSpinner:
-		        // the textview
-		        TextView mView = (TextView) view;
-		        // display the name
-		        mView.setText(cursor.getString(columnIndex));
-		        break;
-		 
-		    case R.id.imageIconSpinner:
-		        // the icon
-		        ImageView mIconView = (ImageView) view;
-		        int dialectId = cursor.getInt(columnIndex);
-		        switch (dialectId){
-		        case 1:
-		            mIconView.setImageResource(R.drawable.house_blue);
-		            break;
-		        case 2:
-		            mIconView.setImageResource(R.drawable.house_green);
-		            break;	            
-		        case 3:
-		            mIconView.setImageResource(R.drawable.house_purple);
-		            break;
-		        default:
-		            mIconView.setImageResource(R.drawable.house_orange);
-		            break;
-		        }
-		    }
-		    return true;
-		}
+	    public void onItemSelected(AdapterView<?> parent,
+	        View view, int pos, long id) {
+	    	colorCode = id;
+	      Toast.makeText(parent.getContext(), "The planet is", Toast.LENGTH_LONG).show();
+	    }
+
+	    public void onNothingSelected(AdapterView parent) {
+	      // Do nothing.
+	    }
 	}
 }

@@ -24,19 +24,11 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  */
 public class Search extends ListActivity {
 
-	/** The m db helper. */
+
 	private MovingDbAdapter mDbHelper;
-	
-	/** The m moving cursor. */
 	private Cursor mMovingCursor;
-	
-	/** The item search field. */
 	private EditText itemSearchField;
-	
-	/** The item search string. */
 	private String itemSearchString;
-	
-	/** The Constant DELETE_ID. */
 	private static final int DELETE_ID = Menu.FIRST;
 	
 	/* (non-Javadoc)
@@ -50,8 +42,11 @@ public class Search extends ListActivity {
 		
 		mDbHelper = new MovingDbAdapter(this);
         
-        
+        findViewById(R.id.boxListViewSearchBox).setVisibility(View.VISIBLE);
         itemSearchField =(EditText) findViewById(R.id.searchBoxesInputField);
+        findViewById(R.id.boxListBottomMenu).setVisibility(View.GONE);
+        
+        
         itemSearchField.addTextChangedListener(new TextWatcher() {
 			
 			@Override

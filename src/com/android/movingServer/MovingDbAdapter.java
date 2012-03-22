@@ -38,27 +38,19 @@ public class MovingDbAdapter {
 		"LID INTEGER NOT NULL DEFAULT 0, " +
 		"locationName TEXT, " +
 		"locationDescription TEXT, " +
+		"locationColor INTEGER, " +
 		"Created INTEGER NOT NULL DEFAULT 0, " +
 		"Updated INTEGER NOT NULL DEFAULT 0, " +
 		"Deleted INTEGER NOT NULL DEFAULT 0" +
 		");";
 	
-	/** The Constant DATABASE_LOCATIONS_TABLE. */
 	private static final String DATABASE_LOCATIONS_TABLE = "Locations";
-	
-	/** The Constant KEY_LOCATION_ID. */
 	public static final String KEY_LOCATION_ID = "_id";
-	
-	/** The Constant KEY_LOCATION_REMOTE_LID. */
 	public static final String KEY_LOCATION_REMOTE_LID = "LID";
-	
-	/** The Constant KEY_LOCATION_NAME. */
 	public static final String KEY_LOCATION_NAME = "locationName";
-	
-	/** The Constant KEY_LOCATION_DESC. */
 	public static final String KEY_LOCATION_DESC = "locationDescription";
+	public static final String KEY_LOCATION_COLOR = "locationColor";
 	
-	/** BOXES TABLE AND KEYS. */
 	private static final String DATABASE_CREATE_BOXES_TABLE = 
 		"CREATE TABLE Boxes " +
 		"(_id integer primary key autoincrement, " +
@@ -219,7 +211,7 @@ public class MovingDbAdapter {
      * @param Description the description
      * @return the long
      */
-    public long createLocation(String Name, String Description) {
+    public long createLocation(String Name, String Description, long Color) {
     	ContentValues initialValues = new ContentValues();
     	
     	if (Description.length() > 1){
@@ -229,6 +221,7 @@ public class MovingDbAdapter {
     	initialValues.put(KEY_LOCATION_NAME, Name.toUpperCase());
     	initialValues.put(KEY_LOCATION_DESC, Description);
     	initialValues.put(KEY_CREATED, 1);
+    	initialValues.put(KEY_LOCATION_COLOR, Color);
     	
     	return mDb.insert(DATABASE_LOCATIONS_TABLE, null, initialValues);
     }
@@ -276,7 +269,7 @@ public class MovingDbAdapter {
      * @param Description the description
      * @return rowId or -1 if failed
      */
-    public long createBox(String Name, String Description) {
+    public long createBox(String Name, String Description, long LID) {
     	ContentValues initialValues = new ContentValues();
     	
     	if (Description.length() > 1){
@@ -285,6 +278,7 @@ public class MovingDbAdapter {
     	
     	initialValues.put(KEY_BOX_NAME, Name.toUpperCase());
     	initialValues.put(KEY_BOX_DESC, Description);
+    	initialValues.put(KEY_BOX_LOCATION_ID, LID);
     	initialValues.put(KEY_CREATED, 1);
     	
     	return mDb.insert(DATABASE_BOX_TABLE, null, initialValues);
@@ -301,6 +295,30 @@ public class MovingDbAdapter {
     	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC, KEY_BOX_LOCATION_ID}, 
     			where, null, null, null, null);
     }
+    
+	public long getLocationColor(long LID){
+		Cursor tmpCursor = mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_COLOR}, KEY_LOCATION_ID + " = " + LID, null, null, null, null);
+		try{
+			tmpCursor.moveToFirst();
+			Long id = tmpCursor.getLong(0);
+			tmpCursor.close();
+			return id;
+		} catch (Exception e){
+			return 0;
+		}
+	}
+    
+	public long getBoxLocationId(long BID){
+		Cursor tmpCursor = mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_LOCATION_ID}, KEY_BOX_ID + " = " + BID, null, null, null, null);
+		try{
+			tmpCursor.moveToFirst();
+			Long id = tmpCursor.getLong(0);
+			tmpCursor.close();
+			return id;
+		} catch (Exception e){
+			return 0;
+		}
+	}
     
     /**
      * Gets the location from id.
@@ -328,7 +346,7 @@ public class MovingDbAdapter {
      * @return the cursor
      */
     public Cursor fetchAllLocations(){
-    	return mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID, KEY_LOCATION_NAME, KEY_LOCATION_DESC}, null, null, null, null, null);
+    	return mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID, KEY_LOCATION_NAME, KEY_LOCATION_DESC, KEY_LOCATION_COLOR}, null, null, null, null, null);
     }
     
     /**
@@ -346,7 +364,7 @@ public class MovingDbAdapter {
     					KEY_BOX_DESC.toLowerCase() + " LIKE '%" + search + "%' ) AND " +
     					KEY_DELETED + "= 0";
     	
-    	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC}, 
+    	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC, KEY_BOX_LOCATION_ID}, 
     			where, null, null, null, KEY_BOX_NAME + " ASC");
     }
 
@@ -372,7 +390,7 @@ public class MovingDbAdapter {
 	 * @param newBoxDescription the new box description
 	 * @return true, if successful
 	 */
-	public boolean editBox(Long boxID, String newBoxName, String newBoxDescription) {
+	public boolean editBox(Long boxID, String newBoxName, String newBoxDescription, Long LID) {
         ContentValues args = new ContentValues();
         
         if (newBoxDescription.length() > 1){
@@ -381,6 +399,7 @@ public class MovingDbAdapter {
         
         args.put(KEY_BOX_NAME, newBoxName.toUpperCase());
         args.put(KEY_BOX_DESC, newBoxDescription);
+        args.put(KEY_BOX_LOCATION_ID, LID);
         args.put(KEY_UPDATED, 1);
 
         return mDb.update(DATABASE_BOX_TABLE, args, KEY_BOX_ID + "=" + boxID, null) > 0;		

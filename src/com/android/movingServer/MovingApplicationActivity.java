@@ -1,5 +1,6 @@
 package com.android.movingServer;
 
+import com.android.movingServer.BoxEdit.SpinnerViewBinder;
 import com.android.movingServer.Client.ResponseReceiver;
 
 import android.app.ListActivity;
@@ -18,9 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -32,50 +36,26 @@ public class MovingApplicationActivity extends ListActivity {
     /** Called when the activity is first created. */
     
 	private static final int ACTIVITY_CREATE_BOX = 0;
-	
-	/** The Constant ACTIVITY_EDIT_BOX. */
 	private static final int ACTIVITY_EDIT_BOX = 1;
-	
-	/** The Constant ACTIVTY_ITEMS_LIST. */
 	private static final int ACTIVTY_ITEMS_LIST = 2;
-	
-	/** The Constant ACTIVTY_READ_TAG. */
 	private static final int ACTIVTY_READ_TAG = 3;
 	
-	/** The m db helper. */
 	private MovingDbAdapter mDbHelper;
-	
-	/** The m moving cursor. */
 	private Cursor mMovingCursor;
 	
-	/** The Constant INSERT_ID. */
+
 	private static final int INSERT_ID = Menu.FIRST;
-	
-	/** The Constant DELETE_ID. */
 	private static final int DELETE_ID = Menu.FIRST + 1;
-	
-	/** The Constant EDIT_BOX. */
 	private static final int EDIT_BOX = Menu.FIRST + 2;
-	
-	/** The Constant CREATE_TAG. */
 	private static final int CREATE_TAG = Menu.FIRST + 3;
-	
-	/** The Constant READ_BOX_TAG. */
 	private static final int READ_BOX_TAG = Menu.FIRST + 4;
-	
-	/** The Constant REFRESH. */
 	private static final int REFRESH = Menu.FIRST + 5;
 	
-	/** The box search field. */
+
 	private EditText boxSearchField;
-	
-	/** The box search string. */
 	private String boxSearchString;
 	
-	/** The receiver. */
 	private ResponseReceiver receiver;
-	
-	/** The filter. */
 	private IntentFilter filter;
 
 	/* (non-Javadoc)
@@ -91,6 +71,7 @@ public class MovingApplicationActivity extends ListActivity {
         mDbHelper.open();
                 
         fillData();
+        setupMenu();
         
         boxSearchField = (EditText) findViewById(R.id.searchBoxesInputField);
         
@@ -104,13 +85,11 @@ public class MovingApplicationActivity extends ListActivity {
 			
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				
+					int after) {		
 			}
 			
 			@Override
 			public void afterTextChanged(Editable s) {
-				
 			}
 		});
         
@@ -131,20 +110,114 @@ public class MovingApplicationActivity extends ListActivity {
     	mMovingCursor = mDbHelper.fetchAllBoxesSearch(boxSearchString);
     	startManagingCursor(mMovingCursor);
     	
-    	String[] from = new String[]{MovingDbAdapter.KEY_BOX_NAME, MovingDbAdapter.KEY_BOX_DESC};
+    	String[] from = new String[]{MovingDbAdapter.KEY_BOX_NAME, MovingDbAdapter.KEY_BOX_DESC, MovingDbAdapter.KEY_BOX_LOCATION_ID};
     	
-    	int[] to = new int[]{R.id.boxName, R.id.boxDescription};
+    	int[] to = new int[]{R.id.boxName, R.id.boxDescription, R.id.boxImage};
     	
     	SimpleCursorAdapter boxes =
     		new SimpleCursorAdapter(this, R.layout.box_row, mMovingCursor, from, to);
+    	
+    	boxes.setViewBinder(new listViewBinder());
     	setListAdapter(boxes);
     }
+    
+	public class listViewBinder implements SimpleCursorAdapter.ViewBinder {
+		 
+		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+		    int viewId = view.getId();
+		    TextView mView;
+		    
+		    switch (viewId) {
+		    
+		    case R.id.boxName:
+		        mView = (TextView) view;
+		        mView.setText(cursor.getString(columnIndex));
+		        break;
+		        
+		    case R.id.boxDescription:
+		        mView = (TextView) view;
+		        mView.setText(cursor.getString(columnIndex));
+		        break;
+		 
+		    case R.id.boxImage:
+		    	long color = mDbHelper.getLocationColor(cursor.getLong(columnIndex));
+		        // the icon
+		        ImageView mIconView = (ImageView) view;//findViewById(R.id.boxImage);//
+		        
+		        //int dialectId = cursor.getInt(columnIndex);
+		        switch ((int)color){
+		        
+		        case 0:
+		            mIconView.setImageResource(R.drawable.box_blue);
+		            break;
+		        case 1:
+		            mIconView.setImageResource(R.drawable.box_green);
+		            break;	            
+		        case 2:
+		            mIconView.setImageResource(R.drawable.box_orange);
+		            break;   
+		        case 3:
+		        	mIconView.setImageResource(R.drawable.box_purple);
+		            break;
+		        case 4:
+		        	mIconView.setImageResource(R.drawable.box_yellow);
+		            break;
+		        case 5:
+		        	mIconView.setImageResource(R.drawable.box_purple);
+		            break;
+		        default:
+		            mIconView.setImageResource(R.drawable.box_orange);
+		            break;
+		        }
+		    }
+		    return true;
+		}
+	}
+    
+    
+    
+    
+	private void setupMenu(){
+		Button newButton = (Button) findViewById(R.id.new_button);
+		Button searchButton = (Button) findViewById(R.id.search_button);
+		Button tagButton = (Button) findViewById(R.id.tag_button);
+		Button refreshButton = (Button) findViewById(R.id.refresh_button);
+		
+		
+		newButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				createBox();
+			}
+		});
+		
+		searchButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Enable search when clicked
+			}
+		});
+		
+		tagButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				readTag();
+			}
+		});
+		
+		refreshButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startHttpService();
+			}
+		});
+	}
     
     /* (non-Javadoc)
      * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
      */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    //@Override
+/*    public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(0, INSERT_ID, 0, R.string.addBoxMenu);
         menu.add(0, READ_BOX_TAG, 0, R.string.readBoxTag);
@@ -152,9 +225,9 @@ public class MovingApplicationActivity extends ListActivity {
         return true;
     }
     
-    /* (non-Javadoc)
+     (non-Javadoc)
      * @see android.app.Activity#onMenuItemSelected(int, android.view.MenuItem)
-     */
+     
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         switch(item.getItemId()) {
@@ -164,16 +237,13 @@ public class MovingApplicationActivity extends ListActivity {
         	
         case READ_BOX_TAG:
         	readTag();
-        
-        
+                
         case REFRESH:
         	startHttpService();
         }
-    	
-        
-        
+
         return super.onMenuItemSelected(featureId, item);
-    }
+    }*/
     
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
@@ -207,10 +277,17 @@ public class MovingApplicationActivity extends ListActivity {
 	        c.moveToPosition(info.position);
 	        Intent i = new Intent(this, BoxEdit.class);
 	        i.putExtra(MovingDbAdapter.KEY_BOX_ID, info.id);
+	        
 	        i.putExtra(MovingDbAdapter.KEY_BOX_NAME, c.getString(
 	                c.getColumnIndexOrThrow(MovingDbAdapter.KEY_BOX_NAME)));
+	        
 	        i.putExtra(MovingDbAdapter.KEY_BOX_DESC, c.getString(
 	                c.getColumnIndexOrThrow(MovingDbAdapter.KEY_BOX_DESC)));
+	        
+	        i.putExtra(MovingDbAdapter.KEY_BOX_LOCATION_ID, c.getString(
+	                c.getColumnIndexOrThrow(MovingDbAdapter.KEY_BOX_LOCATION_ID)));
+	        /*i.putExtra(MovingDbAdapter.KEY_BOX_LOCATION_ID, mDbHelper.getBoxLocationId(info.id));*/
+	        
 	        startActivityForResult(i, ACTIVITY_EDIT_BOX);
 	        
 	        startHttpService();
@@ -324,6 +401,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent intent) 
         case ACTIVITY_CREATE_BOX:
         	String BoxName = extras.getString(MovingDbAdapter.KEY_BOX_NAME);
         	String BoxDescription = extras.getString(MovingDbAdapter.KEY_BOX_DESC);
+        	Long BoxLocation = extras.getLong(MovingDbAdapter.KEY_BOX_LOCATION_ID);
+        	
         	if (BoxName.length() == 0){
             	BoxName = "Div box";
             }
@@ -333,7 +412,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent intent) 
             }
         	
         	
-        	createItems(mDbHelper.createBox(BoxName, BoxDescription));
+        	createItems(mDbHelper.createBox(BoxName, BoxDescription, BoxLocation));
         	fillData();
         	break;
         
@@ -341,8 +420,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent intent) 
         	String NewBoxName = extras.getString(MovingDbAdapter.KEY_BOX_NAME);
         	String NewBoxDescription = extras.getString(MovingDbAdapter.KEY_BOX_DESC);
         	Long BoxID = extras.getLong(MovingDbAdapter.KEY_BOX_ID);
+        	Long newBoxLocation = extras.getLong(MovingDbAdapter.KEY_BOX_LOCATION_ID);
         	
-        	mDbHelper.editBox(BoxID, NewBoxName, NewBoxDescription);
+        	mDbHelper.editBox(BoxID, NewBoxName, NewBoxDescription, newBoxLocation);
         	fillData();
         	break;
         	

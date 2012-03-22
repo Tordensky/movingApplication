@@ -62,6 +62,7 @@ public class Client extends Activity {
 		Button gotoLocationMenuButton = (Button) findViewById(R.id.gotoLocationsMenuButton);
 		Button gotoHelpMenuButton = (Button) findViewById(R.id.gotoHelpMenuButton);
 		
+		
 		gotoBoxMenuButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override

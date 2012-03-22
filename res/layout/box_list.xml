@@ -15,14 +15,21 @@
         android:id="@+id/android:list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/boxListViewSearchBox"
+        android:layout_above="@+id/boxListBottomMenu"
         android:layout_below="@+id/locationListHeader" 
         />
     
     <include 	
-        android:id="@+id/boxListViewSearchBox" 
+        android:id="@+id/boxListViewSearchBox"
 		layout="@layout/search_box"
         />
+   
+    <include
+        android:id="@+id/boxListBottomMenu"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/bottom_menu"
+        android:layout_alignParentBottom="true"
+    />
     
-
 </RelativeLayout >

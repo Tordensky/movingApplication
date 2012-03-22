@@ -1,24 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 	xmlns:android="http://schemas.android.com/apk/res/android"
-  				android:layout_width="fill_parent"
-   				android:layout_height="fill_parent" 
-   				android:orientation="vertical">
+<RelativeLayout 	
+    xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:layout_width="fill_parent"
+   	android:layout_height="fill_parent" 
+   	android:orientation="vertical">
 
-    <include android:id="@+id/itemListCurrentBox" layout="@layout/box_row" android:layout_gravity="top"/>
+    <include 
+        android:id="@+id/itemListCurrentBox" 
+        layout="@layout/box_row" 
+        android:layout_gravity="top"/>
     
     <ImageView
-       	android:id="@+id/imageView2"
+       	android:id="@+id/line"
         android:layout_width="match_parent"
      	android:layout_height="wrap_content"
+     	android:layout_below="@+id/itemListCurrentBox"
         android:src="@drawable/line" />
-    
-    <ListView  	android:id="@+id/android:list"
-    			android:layout_width="fill_parent"
-    			android:layout_height="wrap_content"/>
-	
-	<TextView 	android:id="@+id/android:empty"
-          		android:layout_width="fill_parent"
-        		android:layout_height="wrap_content"
-        		android:text="No items in box"
-        		android:textSize="20sp"/>		
-</LinearLayout>
+
+    <ListView
+        android:id="@+id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/new_item_button"
+        android:layout_below="@+id/line" />
+	
+	<Button
+	    android:id="@+id/new_item_button"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginBottom="2dp"
+	    android:layout_marginLeft="2dp"
+	    android:layout_marginRight="2dp"
+	    android:background="@drawable/menu_button"
+	    android:padding="5dip"
+	    android:textSize="20dp"
+	    android:text="New Item"
+	    android:onClick="createItem"
+	    android:textColor="#ffffff" />
+			
+</RelativeLayout>

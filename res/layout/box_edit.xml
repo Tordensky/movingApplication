@@ -9,17 +9,18 @@
 		android:layout_height="wrap_content">
 
 		<ImageView
-		    android:id="@+id/imageView1"
+		    android:id="@+id/typeImage"
 		    android:layout_width="80dp"
 		    android:layout_height="80dp"
 		    android:src="@drawable/blue_box" />
 
 		<TextView
+		    android:id="@+id/actionName"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="center"
 		    android:padding="5dip"
-		    android:text="Create A New Box"
+		    android:text="Create New Box"
 		    android:textSize="28dp" />
 		
 	</LinearLayout>
