@@ -127,7 +127,8 @@ public class LocationList extends ListActivity {
 		Button newButton = (Button) findViewById(R.id.new_button);
 		Button searchButton = (Button) findViewById(R.id.search_button);
 		Button tagButton = (Button) findViewById(R.id.tag_button);
-		Button refreshButton = (Button) findViewById(R.id.refresh_button);
+		tagButton.setVisibility(View.GONE);
+		searchButton.setVisibility(View.GONE);
 		
 		
 		newButton.setOnClickListener(new View.OnClickListener() {
@@ -136,27 +137,7 @@ public class LocationList extends ListActivity {
 				newLocation();				
 			}
 		});
-		
-		searchButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				searchLocation();				
-			}
-		});
-		
-		tagButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				searchFromTag();				
-			}
-		});
-		
-		refreshButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				refresh();				
-			}
-		});
+				
 	}
 	
 	@Override
@@ -191,25 +172,5 @@ public class LocationList extends ListActivity {
 		startActivity(i);
 	}
 	
-	/**
-	 * Search location.
-	 */
-	private void searchLocation() {
-		Toast.makeText(this, "search Location", 500).show();	
-	}
-	
-	/**
-	 * Search from tag.
-	 */
-	private void searchFromTag(){
-		Toast.makeText(this, "Tag Location", 500).show();
-	}
-	
-	/**
-	 * Refresh.
-	 */
-	private void refresh(){
-		Toast.makeText(this, "Refresh Location", 500).show();
-	}
 	
 }

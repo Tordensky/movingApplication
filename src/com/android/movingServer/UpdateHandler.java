@@ -11,17 +11,10 @@ import android.util.Log;
 
 
 public class UpdateHandler{
-
-
 	private MovingDbAdapter mDbHelper;
 	public static final String PREFS_NAME = "MyPrefsFile";
 	private Context ownersContext;
 	
-	/**
-	 * Instantiates a new update handler.
-	 *
-	 * @param context the context
-	 */
 	public UpdateHandler(Context context){
 		ownersContext = context;
 		mDbHelper = new MovingDbAdapter(context);

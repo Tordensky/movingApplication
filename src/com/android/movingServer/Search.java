@@ -67,12 +67,12 @@ public class Search extends ListActivity {
 			}
 		});
         
-			
+		fillData();	
 		registerForContextMenu(getListView());
 	}
 	
 	private void fillData(){
-		
+		mDbHelper.open();
 		mMovingCursor = mDbHelper.fetchAllITemsFromBoxesWhere(itemSearchString);
     	
     	startManagingCursor(mMovingCursor);
@@ -84,6 +84,8 @@ public class Search extends ListActivity {
     	SimpleCursorAdapter items =
     		new SimpleCursorAdapter(this, R.layout.search_items_row, mMovingCursor, from, to);
     	setListAdapter(items);
+    	//mMovingCursor.close();
+    	//mDbHelper.close();
 	}
 	
  	protected void onListItemClick(ListView l, View v, int position, long id){
@@ -108,35 +110,22 @@ public class Search extends ListActivity {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		
-		Toast.makeText(this, "Fill data", 1000).show();
 		
 		switch (item.getItemId()){
 		
 		case DELETE_ID:
 			mDbHelper.open();
 			mDbHelper.deleteItem(info.id);
+			fillData();
 			mMovingCursor.close();
 			mDbHelper.close();
-			fillData();
+			
 			return true;
 		}		
 		
 		return super.onContextItemSelected(item);
 	}
 
-//	@Override
-//	protected void onResume() {
-//		mDbHelper.open();
-//		fillData();	
-//		super.onResume();
-//	}
-//	
-//	@Override
-//	protected void onPause() {
-//		mMovingCursor.close();
-//		mDbHelper.close();
-//		//unregisterReceiver(receiver);
-//		super.onPause();
-//	}
+
 
 }

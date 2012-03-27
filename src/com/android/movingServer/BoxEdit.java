@@ -113,70 +113,26 @@ public class BoxEdit extends Activity {
 		
 		String[] from = new String[]{MovingDbAdapter.KEY_LOCATION_NAME, MovingDbAdapter.KEY_LOCATION_ID};
 		
-		int[] to = new int[]{R.id.imageNameSpinner, R.id.imageIconSpinner};
+		int[] to = new int[]{R.id.imageNameSpinner, 0};
 		
 		SimpleCursorAdapter items = 
 			new SimpleCursorAdapter(this, R.layout.spinner_view, mMovingCursor, from, to);
 		
-		items.setViewBinder(new SpinnerViewBinder());
+		//items.setViewBinder(new SpinnerViewBinder());
 		mSpinner.setAdapter(items);
 		mSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
 	}
-	
-	public class SpinnerViewBinder implements SimpleCursorAdapter.ViewBinder {
-		 
-		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		    int viewId = view.getId();
-		    switch (viewId) {
-		    case R.id.imageNameSpinner:
-		        TextView mView = (TextView) view;
-		        mView.setText(cursor.getString(columnIndex));
-		        break;
-		 
-		    case R.id.imageIconSpinner:
-		        // the icon
-		        ImageView mIconView = (ImageView) view;
-		        int dialectId = cursor.getInt(columnIndex);
-		        switch (dialectId){
-		        
-		        case 0:
-		            mIconView.setImageResource(R.drawable.house_blue);
-		            break;
-		        case 1:
-		            mIconView.setImageResource(R.drawable.house_green);
-		            break;	            
-		        case 2:
-		            mIconView.setImageResource(R.drawable.house_orange);
-		            break;
-		            
-		        case 3:
-		        	mIconView.setImageResource(R.drawable.house_purple);
-		            break;
-		        case 4:
-		        	mIconView.setImageResource(R.drawable.house_yellow);
-		            break;
-		        case 5:
-		        	mIconView.setImageResource(R.drawable.house_purple);
-		            break;
-		        default:
-		            mIconView.setImageResource(R.drawable.house_orange);
-		            break;
-		        }
-		    }
-		    return true;
-		}
-	}
-	
+		
 	public class MyOnItemSelectedListener implements OnItemSelectedListener {
 
 	    public void onItemSelected(AdapterView<?> parent,
 	        View view, int pos, long id) {
 	    	mLocationID = id;
-	      Toast.makeText(parent.getContext(), "The planet is", Toast.LENGTH_LONG).show();
+	      //Toast.makeText(parent.getContext(), "The planet is", Toast.LENGTH_LONG).show();
 	    }
 
 	    public void onNothingSelected(AdapterView parent) {
-	    	Toast.makeText(parent.getContext(), "Kommer ikke hit", Toast.LENGTH_LONG).show();
+	    	//Toast.makeText(parent.getContext(), "Kommer ikke hit", Toast.LENGTH_LONG).show();
 	    	
 	    }
 	}
@@ -184,5 +140,24 @@ public class BoxEdit extends Activity {
 	public void createLocation(View v){
 		Intent i = new Intent(this, CreateLocation.class);
 		startActivity(i);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Bundle bundle = new Bundle();
+
+		bundle.putString(MovingDbAdapter.KEY_BOX_NAME, mBoxNameText.getText().toString());
+		bundle.putString(MovingDbAdapter.KEY_BOX_DESC, mBoxDescriptionText.getText().toString());
+		bundle.putLong(MovingDbAdapter.KEY_BOX_LOCATION_ID, mLocationID);
+		
+		if (mRowId != null) {
+		    bundle.putLong(MovingDbAdapter.KEY_BOX_ID, mRowId);
+		}
+		
+		Intent mIntent = new Intent();
+		mIntent.putExtras(bundle);
+		setResult(RESULT_OK, mIntent);
+		finish();	
+		super.onBackPressed();
 	}
 }

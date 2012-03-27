@@ -1,11 +1,7 @@
 package com.android.movingServer;
 
-
 import android.app.ListActivity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,17 +15,11 @@ import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class MovingApplicationActivity.
- */
 public class MovingApplicationActivity extends ListActivity {
     /** Called when the activity is first created. */
     
@@ -102,67 +92,13 @@ public class MovingApplicationActivity extends ListActivity {
     	
     	setListAdapter(boxes);
     }
-    
-    /**
-     * Makes it possible to have different images in list view
-     */
-	public class listViewBinder implements SimpleCursorAdapter.ViewBinder {
-		 
-		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-		    int viewId = view.getId();
-		    TextView mView;
-		    
-		    switch (viewId) {
-		    
-		    case R.id.boxName:
-		        mView = (TextView) view;
-		        mView.setText(cursor.getString(columnIndex));
-		        break;
-		        
-		    case R.id.boxDescription:
-		        mView = (TextView) view;
-		        mView.setText(cursor.getString(columnIndex));
-		        break;
-		 
-		    case R.id.boxImage:
-		    	long color = mDbHelper.getLocationColor(cursor.getLong(columnIndex));
-		        ImageView mIconView = (ImageView) view;
-		        
-		        switch ((int)color){
-		        
-		        case 0:
-		            mIconView.setImageResource(R.drawable.box_blue);
-		            break;
-		        case 1:
-		            mIconView.setImageResource(R.drawable.box_green);
-		            break;	            
-		        case 2:
-		            mIconView.setImageResource(R.drawable.box_orange);
-		            break;   
-		        case 3:
-		        	mIconView.setImageResource(R.drawable.box_purple);
-		            break;
-		        case 4:
-		        	mIconView.setImageResource(R.drawable.box_yellow);
-		            break;
-		        case 5:
-		        	mIconView.setImageResource(R.drawable.box_purple);
-		            break;
-		        default:
-		            mIconView.setImageResource(R.drawable.box_orange);
-		            break;
-		        }
-		    }
-		    return true;
-		}
-	}
-     
+       
 	private void setupMenu(){
 		Button newButton = (Button) findViewById(R.id.new_button);
 		Button searchButton = (Button) findViewById(R.id.search_button);
 		Button tagButton = (Button) findViewById(R.id.tag_button);
-		Button refreshButton = (Button) findViewById(R.id.refresh_button);
-			
+		
+		searchButton.setVisibility(View.GONE);
 		newButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -184,12 +120,6 @@ public class MovingApplicationActivity extends ListActivity {
 			}
 		});
 		
-		refreshButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startHttpService();
-			}
-		});
 	}
     
 
@@ -228,7 +158,6 @@ public class MovingApplicationActivity extends ListActivity {
 	        
 	        i.putExtra(MovingDbAdapter.KEY_BOX_LOCATION_ID, c.getString(
 	                c.getColumnIndexOrThrow(MovingDbAdapter.KEY_BOX_LOCATION_ID)));
-	        /*i.putExtra(MovingDbAdapter.KEY_BOX_LOCATION_ID, mDbHelper.getBoxLocationId(info.id));*/
 	        
 	        startActivityForResult(i, ACTIVITY_EDIT_BOX);
 	        
@@ -259,15 +188,16 @@ public class MovingApplicationActivity extends ListActivity {
 	}
 	
     private void createTag(long BID) {
-    	long remoteID = mDbHelper.getRemoteBIDforRowID(BID);
-    	if (remoteID == 0){
-    		print("MUST SYNC BEFORE TAG CAN BE CREATED");
-    	} else {
+    					
+    	//long remoteID = BID;//mDbHelper.getRemoteBIDforRowID(BID);
+    	//if (remoteID == 0){
+    		//print("MUST SYNC BEFORE TAG CAN BE CREATED");
+    	//} else {
     	
 	    	Intent i = new Intent(this, CreateTag.class);
 	    	i.putExtra(CreateTag.TAG_TEXT, "BOX#"+BID);
 	    	startActivity(i);
-    	}
+    	//}
     }
     
     private void createItems(long BID){
@@ -339,10 +269,9 @@ public class MovingApplicationActivity extends ListActivity {
 	        	tagSplit = tagText.split("#");
 	        	
 	        	if (tagSplit[0].compareTo("BOX") == 0){
-	        		Toast.makeText(this, tagSplit[1], 1000).show();
-	        		long rowID = mDbHelper.getLocalBIDfromBID((long)Integer.parseInt(tagSplit[1]));
+	        		long rowID = (long)Integer.parseInt(tagSplit[1]);//mDbHelper.getLocalBIDfromBID((long)Integer.parseInt(tagSplit[1]));
 	        		if (rowID == 0){
-	        			print("Could not fin box");
+	        			print("Could not find box");
 	        		} else {
 	        			gotoBox(rowID);
 	        		}
@@ -355,7 +284,6 @@ public class MovingApplicationActivity extends ListActivity {
         	Log.w("ACTIVITY READ", "Kommer hit");
         	break;
     	}
-
     }
     
 

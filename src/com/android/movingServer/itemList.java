@@ -133,8 +133,6 @@ public class itemList extends ListActivity{
 		
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		
-		Toast.makeText(this, "Fill data", 1000).show();
-		
 		switch (item.getItemId()){
 		
 		case DELETE_ID:

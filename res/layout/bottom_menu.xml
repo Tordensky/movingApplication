@@ -35,24 +35,12 @@
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:layout_marginLeft="1dp"
+    	    android:layout_marginRight="2dp"
     	    android:layout_weight="1"
     	    android:background="@drawable/rounded_button"
     	    android:padding="2dip"
-    	    android:text="From Tag"
+    	    android:text="Search NFC Tag"
     	    android:textColor="#ffffff"
     	    android:textSize="20dp" />
         
-        <Button
-            android:id="@+id/refresh_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="2dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_button"
-            android:padding="2dip"
-            android:text="Refresh"
-            android:textColor="#ffffff"
-            android:textSize="20dp" />
-
     </LinearLayout>

@@ -1,8 +1,10 @@
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent" 
+        
+        >
 
         <include 	
            	android:id="@+id/locationListHeader" 
@@ -10,14 +12,24 @@
        		android:layout_alignParentTop="true"
         	/>
 
+		<ScrollView
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_below="@+id/locationListHeader"
+		    android:layout_marginLeft="10dp"
+		    android:layout_marginRight="10dp" >
+
         <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/locationListHeader"
+            android:layout_height="500dp"
+            
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:text="@string/helpText" android:textSize="20dp"/>
+            android:text="@string/helpText"
+            android:textSize="20dp" />
+
+        </ScrollView>
 
     </RelativeLayout>
