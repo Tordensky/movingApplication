@@ -17,16 +17,9 @@ import android.os.Vibrator;
  */
 public class ItemEdit extends Activity{
 
-	/** The m item name text. */
 	private EditText mItemNameText;
-	
-	/** The m item description text. */
 	private EditText mItemDescriptionText;
-	
-	/** The m db helper. */
 	private MovingDbAdapter mDbHelper;
-	
-	/** The Current box id. */
 	private long CurrentBoxID;
 	
 	/* (non-Javadoc)

@@ -77,6 +77,8 @@ public class CreateLocation extends Activity {
 		Button confirmButton = (Button) findViewById(R.id.confirm);
 		confirmButton.setText("Create Location");
 		
+		findViewById(R.id.createLocationEdit).setVisibility(View.GONE);
+		
 		confirmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -1,34 +1,33 @@
 package com.android.movingServer;
 
-import com.android.movingServer.MovingApplicationActivity.listViewBinder;
+
 
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class LocationList.
- */
+
 public class LocationList extends ListActivity {
 
-	/** The m db helper. */
 	private MovingDbAdapter mDbHelper;
-	
-	/** The m moving cursor. */
 	private Cursor mMovingCursor;
 	
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
+	private static final int DELETE_ID = Menu.FIRST;
+	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,11 +35,10 @@ public class LocationList extends ListActivity {
 		setContentView(R.layout.location_list);
 		mDbHelper = new MovingDbAdapter(this);
 		setupMenu();
+		registerForContextMenu(getListView());
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onPause()
-	 */
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -48,9 +46,7 @@ public class LocationList extends ListActivity {
 		mDbHelper.close();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onResume()
-	 */
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -58,9 +54,7 @@ public class LocationList extends ListActivity {
 		fillData();
 	}
 	
-	/**
-	 * Fill data.
-	 */
+
 	private void fillData(){
 		mMovingCursor = mDbHelper.fetchAllLocations();
 		startManagingCursor(mMovingCursor);
@@ -166,6 +160,29 @@ public class LocationList extends ListActivity {
 			}
 		});
 	}
+	
+//	@Override
+//	public void onCreateContextMenu(ContextMenu menu, View v,
+//			ContextMenuInfo menuInfo) {
+//		super.onCreateContextMenu(menu, v, menuInfo);
+//		menu.add(0, DELETE_ID, 0, R.string.itemListMenuDelete);
+//	}
+//	
+//	@Override
+//	public boolean onContextItemSelected(MenuItem item) {
+//		
+//		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+//		
+//		switch (item.getItemId()){
+//		
+//		case DELETE_ID:
+//			mDbHelper.deleteLocation(info.id);
+//			fillData();
+//			return true;
+//		}		
+//		
+//		return super.onContextItemSelected(item);
+//	}
 	
 	/**
 	 * New location.

@@ -1,6 +1,5 @@
 package com.android.movingServer;
 
-import org.apache.http.util.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,16 +18,13 @@ import android.util.Log;
  */
 public class MovingDbAdapter {
 		
-	/** The Constant TAG. */
+
 	private static final String TAG = "MovingDbAdapter";
-	
-	/** The m db helper. */
+
 	private DatabaseHelper mDbHelper;
-	
-	/** The m db. */
+
 	private SQLiteDatabase mDb;
-	
-	/** The Constant DATABASE_NAME. */
+
 	private static final String DATABASE_NAME = "data";
 	
 	/** LOCATION TABLE AND KEYS. */
@@ -346,7 +342,7 @@ public class MovingDbAdapter {
      * @return the cursor
      */
     public Cursor fetchAllLocations(){
-    	return mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID, KEY_LOCATION_NAME, KEY_LOCATION_DESC, KEY_LOCATION_COLOR}, null, null, null, null, null);
+    	return mDb.query(DATABASE_LOCATIONS_TABLE, new String[] {KEY_LOCATION_ID, KEY_LOCATION_NAME, KEY_LOCATION_DESC, KEY_LOCATION_COLOR}, KEY_DELETED +" = 0", null, null, null, null);
     }
     
     /**
@@ -360,12 +356,22 @@ public class MovingDbAdapter {
     		search = "";
     	}
     	search = search.toLowerCase();
-    	String where = 	"("+KEY_BOX_NAME.toLowerCase() + " LIKE '%" + search + "%' OR " + 
-    					KEY_BOX_DESC.toLowerCase() + " LIKE '%" + search + "%' ) AND " +
-    					KEY_DELETED + "= 0";
+    	String where = 		"(("+KEY_BOX_NAME.toLowerCase() + " LIKE '%" + search + "%' OR " + 
+    						KEY_BOX_DESC.toLowerCase() + " LIKE '%" + search + "%' ) AND " +
+    						DATABASE_BOX_TABLE+"."+KEY_DELETED + "= 0) AND " +
+    						DATABASE_BOX_TABLE+"."+KEY_BOX_LOCATION_ID+" = "+ 
+    						DATABASE_LOCATIONS_TABLE+"."+KEY_LOCATION_ID;
     	
-    	return mDb.query(DATABASE_BOX_TABLE, new String[] {KEY_BOX_ID, KEY_BOX_NAME, KEY_BOX_DESC, KEY_BOX_LOCATION_ID}, 
-    			where, null, null, null, KEY_BOX_NAME + " ASC");
+    	String[] select = {	DATABASE_BOX_TABLE+"."+KEY_BOX_ID, 
+    						DATABASE_BOX_TABLE+"."+KEY_BOX_NAME, 
+    						DATABASE_BOX_TABLE+"."+KEY_BOX_DESC, 
+    						DATABASE_BOX_TABLE+"."+KEY_BOX_LOCATION_ID,
+    						KEY_LOCATION_NAME
+    						};
+    	
+    	String from = DATABASE_BOX_TABLE + ", " + DATABASE_LOCATIONS_TABLE;
+    	
+    	return mDb.query(from, select, where, null, null, null, KEY_BOX_NAME + " ASC");
     }
 
 	/**

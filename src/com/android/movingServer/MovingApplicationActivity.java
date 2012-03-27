@@ -1,7 +1,5 @@
 package com.android.movingServer;
 
-import com.android.movingServer.BoxEdit.SpinnerViewBinder;
-import com.android.movingServer.Client.ResponseReceiver;
 
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
@@ -58,9 +56,6 @@ public class MovingApplicationActivity extends ListActivity {
 	private ResponseReceiver receiver;
 	private IntentFilter filter;
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,31 +91,37 @@ public class MovingApplicationActivity extends ListActivity {
         filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new ResponseReceiver();
-        
-		        
+        	        
         registerForContextMenu(getListView());
     }
-    
-    /**
-     * Fill data.
-     */
+	    
     private void fillData() {
-    	//Toast.makeText(this, "Fill data", 1000).show();
     	
     	mMovingCursor = mDbHelper.fetchAllBoxesSearch(boxSearchString);
     	startManagingCursor(mMovingCursor);
     	
-    	String[] from = new String[]{MovingDbAdapter.KEY_BOX_NAME, MovingDbAdapter.KEY_BOX_DESC, MovingDbAdapter.KEY_BOX_LOCATION_ID};
+    	String[] from = new String[]{	MovingDbAdapter.KEY_BOX_NAME, 
+    									MovingDbAdapter.KEY_BOX_DESC, 
+    									MovingDbAdapter.KEY_BOX_LOCATION_ID,
+    									MovingDbAdapter.KEY_LOCATION_NAME
+    									};
     	
-    	int[] to = new int[]{R.id.boxName, R.id.boxDescription, R.id.boxImage};
+    	// Used if different box images
+    	//int[] to = new int[]{R.id.boxName, R.id.boxDescription, R.id.boxImage};
+    	
+    	int[] to = new int[]{R.id.boxName, R.id.boxDescription, 0, R.id.boxLocation};
     	
     	SimpleCursorAdapter boxes =
     		new SimpleCursorAdapter(this, R.layout.box_row, mMovingCursor, from, to);
     	
-    	boxes.setViewBinder(new listViewBinder());
+    	// Used if different box images
+    	//boxes.setViewBinder(new listViewBinder());
     	setListAdapter(boxes);
     }
     
+    /**
+     * Makes it possible to have different images in list view
+     */
 	public class listViewBinder implements SimpleCursorAdapter.ViewBinder {
 		 
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
@@ -141,10 +142,8 @@ public class MovingApplicationActivity extends ListActivity {
 		 
 		    case R.id.boxImage:
 		    	long color = mDbHelper.getLocationColor(cursor.getLong(columnIndex));
-		        // the icon
-		        ImageView mIconView = (ImageView) view;//findViewById(R.id.boxImage);//
+		        ImageView mIconView = (ImageView) view;
 		        
-		        //int dialectId = cursor.getInt(columnIndex);
 		        switch ((int)color){
 		        
 		        case 0:
@@ -173,15 +172,13 @@ public class MovingApplicationActivity extends ListActivity {
 		    return true;
 		}
 	}
-    
-    
-    
-    
+     
 	private void setupMenu(){
 		Button newButton = (Button) findViewById(R.id.new_button);
 		Button searchButton = (Button) findViewById(R.id.search_button);
 		Button tagButton = (Button) findViewById(R.id.tag_button);
 		Button refreshButton = (Button) findViewById(R.id.refresh_button);
+		
 		
 		
 		newButton.setOnClickListener(new View.OnClickListener() {
@@ -213,41 +210,7 @@ public class MovingApplicationActivity extends ListActivity {
 		});
 	}
     
-    /* (non-Javadoc)
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
-    //@Override
-/*    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        menu.add(0, INSERT_ID, 0, R.string.addBoxMenu);
-        menu.add(0, READ_BOX_TAG, 0, R.string.readBoxTag);
-        menu.add(0, REFRESH, 0, R.string.refresh);
-        return true;
-    }
-    
-     (non-Javadoc)
-     * @see android.app.Activity#onMenuItemSelected(int, android.view.MenuItem)
-     
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        switch(item.getItemId()) {
-        case INSERT_ID:
-            createBox();
-        	return true;
-        	
-        case READ_BOX_TAG:
-        	readTag();
-                
-        case REFRESH:
-        	startHttpService();
-        }
 
-        return super.onMenuItemSelected(featureId, item);
-    }*/
-    
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
-	 */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
@@ -258,9 +221,7 @@ public class MovingApplicationActivity extends ListActivity {
 		
 	}
     
-    /* (non-Javadoc)
-     * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
-     */
+
     @Override
 	public boolean onContextItemSelected(MenuItem item) {
     	AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -301,36 +262,23 @@ public class MovingApplicationActivity extends ListActivity {
     	return super.onContextItemSelected(item);
 	}
     
-    /* (non-Javadoc)
-     * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
-     */
     protected void onListItemClick(ListView l, View v, int position, long id){
     	super.onListItemClick(l, v, position, id);
     	gotoBox(id);
     }
 	
-	
-    /**
-     * Creates the box.
-     */
     private void createBox() {
     	Intent i = new Intent(this, BoxEdit.class);
     	startActivityForResult(i, ACTIVITY_CREATE_BOX);
     }
-    
-	/**
-	 * Read tag.
-	 */
+
 	private void readTag() {
 		Intent i = new Intent(this, ReadTag.class);
 		startActivityForResult(i, ACTIVTY_READ_TAG);	
 	}
+	
+
     
-    /**
-     * Creates the tag.
-     *
-     * @param BID the bID
-     */
     private void createTag(long BID) {
     	long remoteID = mDbHelper.getRemoteBIDforRowID(BID);
     	if (remoteID == 0){
@@ -343,22 +291,12 @@ public class MovingApplicationActivity extends ListActivity {
     	}
     }
     
-    /**
-     * Creates the items.
-     *
-     * @param BID the bID
-     */
     private void createItems(long BID){
     	Intent i = new Intent(this, ItemEdit.class);
     	i.putExtra(MovingDbAdapter.KEY_BOX_ID, BID);
     	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
     }
     
-    /**
-     * Goto box.
-     *
-     * @param BID the bID
-     */
     private void gotoBox(long BID){
     	
     	Intent i = new Intent(this, itemList.class);
@@ -366,32 +304,15 @@ public class MovingApplicationActivity extends ListActivity {
     	startActivityForResult(i, ACTIVTY_ITEMS_LIST);
     }
     
-	/**
-	 * Start http service.
-	 */
 	private void startHttpService() {
 		Intent i = new Intent(this, HttpMovingClient.class);
 		startService(i);
 	}
     
-/*    private void enableDisableView(View view, boolean enabled) {
-        view.setEnabled(enabled);
-
-        if ( view instanceof ViewGroup ) {
-            ViewGroup group = (ViewGroup)view;
-
-            for ( int idx = 0 ; idx < group.getChildCount() ; idx++ ) {
-                enableDisableView(group.getChildAt(idx), enabled);
-            }
-        }
-    }*/
-
-    
-    /* (non-Javadoc)
- * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
- */
-protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
     	super.onActivityResult(requestCode, resultCode, intent);
+    	
+    	mDbHelper.open();
     	
     	Bundle extras;
 		extras = intent.getExtras();
@@ -458,51 +379,36 @@ protected void onActivityResult(int requestCode, int resultCode, Intent intent) 
 
     }
     
-	/**
-	 * The Class ResponseReceiver.
-	 */
 	public class ResponseReceiver extends BroadcastReceiver {
 		
 		/** The Constant ACTION_RESP. */
 		public static final String ACTION_RESP =
 		      "com.mamlambo.intent.action.MESSAGE_PROCESSED";
 
-		/* (non-Javadoc)
-		 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
-		 */
 		@Override
 		public void onReceive(Context arg0, Intent arg1) {
-			// TODO Auto-generated method stub
 			fillData();
 		}	
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onPause()
-	 */
 	@Override
 	protected void onPause() {
+		mMovingCursor.close();
+		mDbHelper.close();
 		unregisterReceiver(receiver);
 		super.onPause();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onResume()
-	 */
 	@Override
 	protected void onResume() {
+		mDbHelper.open();
 		registerReceiver(receiver, filter);
 		startHttpService();
+		fillData();
 		super.onResume();
 	}
 	
-	/**
-	 * Prints the.
-	 *
-	 * @param Text the text
-	 */
 	private void print (String Text){
-		//Log.i(getClass().getSimpleName(), "TIMER EVENT PRINT --< "+Text+" >--");
 		Toast.makeText(this, Text, 1000).show();
 	}
 	

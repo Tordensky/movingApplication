@@ -3,10 +3,6 @@
  */
 package com.android.movingServer;
 
-
-
-
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,10 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class BoxEdit.
- */
 public class BoxEdit extends Activity {
 	
 
@@ -40,10 +32,6 @@ public class BoxEdit extends Activity {
 	private Cursor mMovingCursor;
 	Spinner mSpinner;
 
-	
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,9 +52,7 @@ public class BoxEdit extends Activity {
 			TextView header = (TextView) findViewById(R.id.actionName);
 			header.setText("Edit Box");
 			confirmButton.setText("Confirm");
-			
-			
-			
+				
 			String title = extras.getString(MovingDbAdapter.KEY_BOX_NAME);
 		    String body = extras.getString(MovingDbAdapter.KEY_BOX_DESC);
 		    mRowId = extras.getLong(MovingDbAdapter.KEY_BOX_ID);
@@ -119,6 +105,11 @@ public class BoxEdit extends Activity {
 	private void fillData(){
 		mMovingCursor = mDbHelper.fetchAllLocations();
 		
+		if (mMovingCursor.getCount() == 0){
+			mLocationID = mDbHelper.createLocation("No Location", "", 0);
+			mMovingCursor = mDbHelper.fetchAllLocations();
+		}
+		
 		mSpinner = (Spinner) findViewById(R.id.spinner1);
 		
 		String[] from = new String[]{MovingDbAdapter.KEY_LOCATION_NAME, MovingDbAdapter.KEY_LOCATION_ID};
@@ -139,9 +130,7 @@ public class BoxEdit extends Activity {
 		    int viewId = view.getId();
 		    switch (viewId) {
 		    case R.id.imageNameSpinner:
-		        // the textview
 		        TextView mView = (TextView) view;
-		        // display the name
 		        mView.setText(cursor.getString(columnIndex));
 		        break;
 		 
@@ -188,7 +177,13 @@ public class BoxEdit extends Activity {
 	    }
 
 	    public void onNothingSelected(AdapterView parent) {
-	      // Do nothing.
+	    	Toast.makeText(parent.getContext(), "Kommer ikke hit", Toast.LENGTH_LONG).show();
+	    	
 	    }
+	}
+	
+	public void createLocation(View v){
+		Intent i = new Intent(this, CreateLocation.class);
+		startActivity(i);
 	}
 }

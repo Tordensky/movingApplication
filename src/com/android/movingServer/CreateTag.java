@@ -15,10 +15,4 @@ public class CreateTag extends EasyNfcWriterActivity{
 		Toast.makeText(this, "Why?", 1000).show();
 	}
 	
-//	@Override
-//	public void onBackPressed() {
-//	    //Intent mIntent = new Intent();
-//	    //setResult(RESULT_OK, mIntent);
-//	    super.onBackPressed();
-//	}
 }

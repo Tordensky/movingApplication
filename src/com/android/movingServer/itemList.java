@@ -25,7 +25,7 @@ public class itemList extends ListActivity{
 
 	private static final int ACTIVITY_CREATE_ITEM = 0;
 	private static final int INSERT_ID = Menu.FIRST;
-	private static final int DELETE_ID = Menu.FIRST + 5;
+	private static final int DELETE_ID = Menu.FIRST + 1;
 	private MovingDbAdapter mDbHelper;
 	private Cursor mMovingCursor;
 	private long CurrentBoxID;
@@ -92,32 +92,7 @@ public class itemList extends ListActivity{
     	setListAdapter(items);
 	}
 		
-    /* 
-     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-     */
-/*    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        menu.add(1, INSERT_ID, 0, R.string.addItemMenu).getItemId();
-        return true;
-    }
-    
-    
-     
-     * @see android.app.Activity#onMenuItemSelected(int, android.view.MenuItem)
-     
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-    	switch (item.getItemId()){
-		case INSERT_ID:
-			
-	        //createItem();
-	        fillData();
-			return true;
-    	}    	
-    	return super.onContextItemSelected(item);
-	}
-*/	
+
 	/**
 	 * Creates the item.
 	 */
@@ -170,4 +145,5 @@ public class itemList extends ListActivity{
 		
 		return super.onContextItemSelected(item);
 	}
+	
 }
