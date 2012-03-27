@@ -395,15 +395,12 @@ public class MovingApplicationActivity extends ListActivity {
 	protected void onPause() {
 		mMovingCursor.close();
 		mDbHelper.close();
-		unregisterReceiver(receiver);
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		mDbHelper.open();
-		registerReceiver(receiver, filter);
-		startHttpService();
 		fillData();
 		super.onResume();
 	}
