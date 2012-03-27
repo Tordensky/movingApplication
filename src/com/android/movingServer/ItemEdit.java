@@ -48,9 +48,7 @@ public class ItemEdit extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-
 				mDbHelper.createItem(CurrentBoxID, mItemNameText.getText().toString(), mItemDescriptionText.getText().toString());
-				//startBoxView();
 				print_msg("Item added", 100);
 				Intent mIntent = new Intent();
 				setResult(RESULT_OK, mIntent);
@@ -62,13 +60,9 @@ public class ItemEdit extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-
-				mDbHelper.createItem(CurrentBoxID, mItemNameText.getText().toString(), mItemDescriptionText.getText().toString());
-				
-				print_msg("Item added", 100);
-				
+				mDbHelper.createItem(CurrentBoxID, mItemNameText.getText().toString(), mItemDescriptionText.getText().toString());			
+				print_msg("Item added", 100);		
 				mItemNameText.setText("");
-				
 				mItemDescriptionText.setText("");
 			}
 		});
@@ -77,9 +71,6 @@ public class ItemEdit extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				//startBoxView();
-		    	
-				
 				Intent mIntent = new Intent();
 				setResult(RESULT_OK, mIntent);
 				finish();
@@ -87,21 +78,6 @@ public class ItemEdit extends Activity{
 		});
 	}
 	
-	/**
-	 * Start box view.
-	 */
-	private void startBoxView(){
-		Intent i = new Intent(this, itemList.class);
-    	i.putExtra(MovingDbAdapter.KEY_BOX_ID, CurrentBoxID);
-    	startActivity(i);
-	}
-	
-	/**
-	 * Print_msg.
-	 *
-	 * @param message the message
-	 * @param duration the duration
-	 */
 	private void print_msg(String message, int duration){
 		Toast.makeText(this, message, duration).show();
 		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);

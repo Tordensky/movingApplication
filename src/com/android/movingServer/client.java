@@ -26,24 +26,10 @@ public class Client extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
 		setContentView(R.layout.main);			
-        setupSharedPreferences();
-        
-        // Sync with Server
-		startHttpService();
+
 		
-	}
-		
-	private void setupSharedPreferences(){
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		
-		if (settings.getLong("lastConnectionTimeStamp", 0) == 0){
-			editor.putLong("lastConnectionTimeStamp", 0);
-			editor.commit();
-		}
-	}
+	}		
 	
 	public void startBoxListAction(View v){
 		Intent i = new Intent(this, MovingApplicationActivity.class);
@@ -59,26 +45,9 @@ public class Client extends Activity {
 		Intent i =  new Intent(this, LocationList.class);
 		startActivity(i);
 	}
-	
-	private void startHttpService() {
-		Intent i = new Intent(this, HttpMovingClient.class);
-		startService(i);
-	}	
-	
+		
 	public void startHelpAction(View v){
 		Intent i = new Intent(this, Help.class);
 		startActivity(i);
-	}
-	
-	public class ResponseReceiver extends BroadcastReceiver {
-		
-		/** The Constant ACTION_RESP. */
-		public static final String ACTION_RESP =
-		      "com.mamlambo.intent.action.MESSAGE_PROCESSED";
-
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-
-		}	
 	}
 }

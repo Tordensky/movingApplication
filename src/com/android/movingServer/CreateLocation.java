@@ -31,31 +31,12 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 public class CreateLocation extends Activity {
 
-	// Spinner images
-	private static Integer[] imageIconDatabase = { 	R.drawable.box_blue, 
-													R.drawable.box_green, 
-													R.drawable.box_orange, 
-													R.drawable.box_purple,
-													R.drawable.box_yellow, 
-													R.drawable.box_darkpurple 
-													};
-	
-	private String[] imageNameDatabase = { 			"Blue", 
-													"Green",
-													"Orange",
-													"Purple",
-													"Yellow",
-													"Dark Purple"
-													};
-	
-	private List<Map<String, ?>> datalist;
 		
 	private MovingDbAdapter mDbHelper;
-	private Cursor mMovingCursor;
 	
 	private EditText locationName;
 	private EditText locationDescription;
-	private long colorCode;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,61 +67,11 @@ public class CreateLocation extends Activity {
 			}
 		});
 	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mDbHelper.close();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mDbHelper.open();
-		setupColorSpinner();
-		//fillData();
-	}
 	
 	private void createLocation() {
-		mDbHelper.createLocation(locationName.getText().toString(), locationDescription.getText().toString(), colorCode);	
+		mDbHelper.open();
+		mDbHelper.createLocation(locationName.getText().toString(), locationDescription.getText().toString(), 0);	
+		mDbHelper.close();
 		finish();
-	}
-		
-	void setupColorSpinner(){
-		
-		datalist = new ArrayList<Map<String, ?>>();
-		Map<String, Object> map;
-		
-		for (int i = 0; i < imageNameDatabase.length; i++){
-			map = new HashMap<String, Object>();
-			map.put("Name", imageNameDatabase[i]);
-			map.put("Icon", imageIconDatabase[i]);
-			datalist.add(map);
-		}
-		
-		Spinner mSpinner = (Spinner) findViewById(R.id.spinner1);
-		
-		int[] to = new int[]{R.id.imageNameSpinner, R.id.imageIconSpinner};
-		
-		String[] from = new String[]{"Name", "Icon"};
-		
-		SimpleAdapter colors = 
-			new SimpleAdapter(this, datalist, R.layout.spinner_view, from , to);
-		
-		mSpinner.setAdapter(colors);
-		mSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
-	}
-	
-	public class MyOnItemSelectedListener implements OnItemSelectedListener {
-
-	    public void onItemSelected(AdapterView<?> parent,
-	        View view, int pos, long id) {
-	    	colorCode = id;
-	      Toast.makeText(parent.getContext(), "The planet is", Toast.LENGTH_LONG).show();
-	    }
-
-	    public void onNothingSelected(AdapterView parent) {
-	      // Do nothing.
-	    }
 	}
 }

@@ -1,7 +1,5 @@
 package com.android.movingServer;
 
-
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -161,28 +159,28 @@ public class LocationList extends ListActivity {
 		});
 	}
 	
-//	@Override
-//	public void onCreateContextMenu(ContextMenu menu, View v,
-//			ContextMenuInfo menuInfo) {
-//		super.onCreateContextMenu(menu, v, menuInfo);
-//		menu.add(0, DELETE_ID, 0, R.string.itemListMenuDelete);
-//	}
-//	
-//	@Override
-//	public boolean onContextItemSelected(MenuItem item) {
-//		
-//		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-//		
-//		switch (item.getItemId()){
-//		
-//		case DELETE_ID:
-//			mDbHelper.deleteLocation(info.id);
-//			fillData();
-//			return true;
-//		}		
-//		
-//		return super.onContextItemSelected(item);
-//	}
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, DELETE_ID, 0, R.string.itemListMenuDelete);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		
+		switch (item.getItemId()){
+		
+		case DELETE_ID:
+			mDbHelper.deleteLocation(info.id);
+			fillData();
+			return true;
+		}		
+		
+		return super.onContextItemSelected(item);
+	}
 	
 	/**
 	 * New location.

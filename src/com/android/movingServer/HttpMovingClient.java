@@ -18,7 +18,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import com.android.movingServer.Client.ResponseReceiver;
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -93,7 +93,7 @@ public class HttpMovingClient extends IntentService {
 			String result = responseToString(response);
 			print (result);
 			updateHandler.updateFromSync(result);//updateFromInput(result);
-			broadcastUpdate();
+			//broadcastUpdate();
 
 		} finally {
 			if (input != null) {
@@ -160,11 +160,11 @@ public class HttpMovingClient extends IntentService {
         super.onDestroy();
     }
 
-	private void broadcastUpdate(){		
-		/*Sends Response to application*/
-		Intent broadcastIntent = new Intent();
-		broadcastIntent.setAction(ResponseReceiver.ACTION_RESP);
-		broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-		sendBroadcast(broadcastIntent);
-	}
+//	private void broadcastUpdate(){		
+//		/*Sends Response to application*/
+//		Intent broadcastIntent = new Intent();
+//		broadcastIntent.setAction(ResponseReceiver.ACTION_RESP);
+//		broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+//		sendBroadcast(broadcastIntent);
+//	}
 }

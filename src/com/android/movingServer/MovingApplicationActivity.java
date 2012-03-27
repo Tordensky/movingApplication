@@ -41,20 +41,12 @@ public class MovingApplicationActivity extends ListActivity {
 	private MovingDbAdapter mDbHelper;
 	private Cursor mMovingCursor;
 	
-
-	private static final int INSERT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final int EDIT_BOX = Menu.FIRST + 2;
 	private static final int CREATE_TAG = Menu.FIRST + 3;
-	private static final int READ_BOX_TAG = Menu.FIRST + 4;
-	private static final int REFRESH = Menu.FIRST + 5;
-	
 
 	private EditText boxSearchField;
 	private String boxSearchString;
-	
-	private ResponseReceiver receiver;
-	private IntentFilter filter;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,9 +80,6 @@ public class MovingApplicationActivity extends ListActivity {
 			}
 		});
         
-        filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
-        receiver = new ResponseReceiver();
         	        
         registerForContextMenu(getListView());
     }
@@ -105,17 +94,12 @@ public class MovingApplicationActivity extends ListActivity {
     									MovingDbAdapter.KEY_BOX_LOCATION_ID,
     									MovingDbAdapter.KEY_LOCATION_NAME
     									};
-    	
-    	// Used if different box images
-    	//int[] to = new int[]{R.id.boxName, R.id.boxDescription, R.id.boxImage};
-    	
+    	   	
     	int[] to = new int[]{R.id.boxName, R.id.boxDescription, 0, R.id.boxLocation};
     	
     	SimpleCursorAdapter boxes =
     		new SimpleCursorAdapter(this, R.layout.box_row, mMovingCursor, from, to);
     	
-    	// Used if different box images
-    	//boxes.setViewBinder(new listViewBinder());
     	setListAdapter(boxes);
     }
     
@@ -178,9 +162,7 @@ public class MovingApplicationActivity extends ListActivity {
 		Button searchButton = (Button) findViewById(R.id.search_button);
 		Button tagButton = (Button) findViewById(R.id.tag_button);
 		Button refreshButton = (Button) findViewById(R.id.refresh_button);
-		
-		
-		
+			
 		newButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -217,8 +199,7 @@ public class MovingApplicationActivity extends ListActivity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, CREATE_TAG, 0, R.string.boxListMenuCreateTag);
 		menu.add(0, EDIT_BOX, 0, R.string.boxListMenuEdit);
-		menu.add(0, DELETE_ID, 0, R.string.boxListMenuDelete);
-		
+		menu.add(0, DELETE_ID, 0, R.string.boxListMenuDelete);	
 	}
     
 
@@ -277,8 +258,6 @@ public class MovingApplicationActivity extends ListActivity {
 		startActivityForResult(i, ACTIVTY_READ_TAG);	
 	}
 	
-
-    
     private void createTag(long BID) {
     	long remoteID = mDbHelper.getRemoteBIDforRowID(BID);
     	if (remoteID == 0){
@@ -379,17 +358,6 @@ public class MovingApplicationActivity extends ListActivity {
 
     }
     
-	public class ResponseReceiver extends BroadcastReceiver {
-		
-		/** The Constant ACTION_RESP. */
-		public static final String ACTION_RESP =
-		      "com.mamlambo.intent.action.MESSAGE_PROCESSED";
-
-		@Override
-		public void onReceive(Context arg0, Intent arg1) {
-			fillData();
-		}	
-	}
 
 	@Override
 	protected void onPause() {
@@ -408,6 +376,5 @@ public class MovingApplicationActivity extends ListActivity {
 	private void print (String Text){
 		Toast.makeText(this, Text, 1000).show();
 	}
-	
-	
+
 }

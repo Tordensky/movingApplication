@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 public class BoxEdit extends Activity {
 	
-
 	private EditText mBoxNameText;
 	private EditText mBoxDescriptionText;
 
